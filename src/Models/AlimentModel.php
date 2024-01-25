@@ -11,7 +11,6 @@ class AlimentModel extends Model {
         $this->table = 'aliment';
     }
 
-
     /**
      * Get the value of nom
      */ 
