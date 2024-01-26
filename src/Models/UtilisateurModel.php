@@ -5,13 +5,29 @@ namespace App\Models;
 class UtilisateurModel extends Model {
 
     protected $id;
-    protected $pseudo;
+    protected $nomUtilisateur;
     protected $email;
-    protected $password;
+    protected $mdp;
     protected $role;
      
     public function __construct() {
-        $this->table = 'utilisateur';
+        $this->table = 'utilisateurs';
+    }
+
+    public function findOneByEmail(string $email) {
+        return $this->executeQuery('SELECT * FROM ' . $this->table . 'WHERE email = ?', [$email])->fetch();
+    }
+
+    /**
+     * Créer la session de l'utilisateur
+     *
+     * @return void
+     */
+    public function setSession() {
+        $_SESSION['user'] = [
+            'id' => $this->id,
+            'email' => $this->email
+        ];
     }
     
 
@@ -38,9 +54,9 @@ class UtilisateurModel extends Model {
     /**
      * Get the value of pseudo
      */ 
-    public function getPseudo()
+    public function getNomUtilisateur()
     {
-        return $this->pseudo;
+        return $this->nomUtilisateur;
     }
 
     /**
@@ -48,9 +64,9 @@ class UtilisateurModel extends Model {
      *
      * @return  self
      */ 
-    public function setPseudo($pseudo)
+    public function setNomUtilisateur($nomUtilisateur)
     {
-        $this->pseudo = $pseudo;
+        $this->nomUtilisateur = $nomUtilisateur;
 
         return $this;
     }
@@ -78,9 +94,9 @@ class UtilisateurModel extends Model {
     /**
      * Get the value of password
      */ 
-    public function getPassword()
+    public function getMdp()
     {
-        return $this->password;
+        return $this->mdp;
     }
 
     /**
@@ -88,9 +104,9 @@ class UtilisateurModel extends Model {
      *
      * @return  self
      */ 
-    public function setPassword($password)
+    public function setMdp($mdp)
     {
-        $this->password = $password;
+        $this->mdp = $mdp;
 
         return $this;
     }
