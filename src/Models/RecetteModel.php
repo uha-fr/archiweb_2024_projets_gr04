@@ -11,7 +11,22 @@ class RecetteModel extends Model {
     public function __construct() {
         $this->table = 'recette';
     }
-    
+
+    /**
+     * Retourne les recettes qui correspondent à l'ensemble des aliments d'id $ids
+     *
+     * @param array $ids Les id des aliments
+     * @return array
+     */
+    public function findByIdsAliments(array $ids):array {
+        $sqlJoins = "";
+        foreach ($ids as $index => $id) {
+            $alias = "ra" . ($index + 1);  // Utilisation d'un alias unique pour chaque join
+            $sqlJoins .= "JOIN recette_aliment $alias ON r.id = $alias.id_recette AND $alias.id_aliment = ? ";
+        }
+        $query =  $this->executeQuery('SELECT r.id, r.nom FROM ' . $this->table . ' r ' . $sqlJoins, $ids);
+        return $query->fetchAll(); 
+    }
 
     /**
      * Get the value of id

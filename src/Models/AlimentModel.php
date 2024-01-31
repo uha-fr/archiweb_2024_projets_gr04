@@ -11,6 +11,11 @@ class AlimentModel extends Model {
         $this->table = 'aliment';
     }
 
+    public function findAlimentsByRecetteId($id) {
+        $query = $this->executeQuery('SELECT aliment.id, aliment.nom FROM recette_aliment JOIN aliment ON recette_aliment.id_aliment = aliment.id WHERE recette_aliment.id_recette = ' . $id);
+        return $query->fetchAll();
+    }
+
     /**
      * Get the value of nom
      */ 
