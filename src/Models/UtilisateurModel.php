@@ -18,18 +18,26 @@ class UtilisateurModel extends Model {
         return $this->executeQuery('SELECT * FROM ' . $this->table . 'WHERE email = ?', [$email])->fetch();
     }
 
-    /**
-     * Créer la session de l'utilisateur
-     *
-     * @return void
-     */
-    public function setSession() {
-        $_SESSION['user'] = [
-            'id' => $this->id,
-            'email' => $this->email
-        ];
+    public function findOneByNameAndPassword(string $name, string $password) {
+        return $this->executeQuery('SELECT * FROM ' . $this->table . 'WHERE nom_utilisateur = ? AND mdp = ?', [$name, $password])->fetch();
     }
-    
+
+    /**
+     * Ajoute un nouvel utilisateur à la base de données.
+     *
+     * @param string $nomUtilisateur
+     * @param string $mdp
+     * @param string $email
+     * @param string $role
+     * @return bool Renvoie true si l'ajout a réussi, false sinon.
+     */
+    public function addUser(string $nomUtilisateur, string $mdp, string $email, string $role): bool
+    {
+        $query = 'INSERT INTO ' . $this->table . ' (nom_utilisateur, mdp, email, role) VALUES (?, ?, ?, ?)';
+        $result = $this->executeQuery($query, [$nomUtilisateur, $mdp, $email, $role]);
+
+        return $result !== false;
+    }
 
     /**
      * Get the value of id

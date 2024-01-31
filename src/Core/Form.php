@@ -131,5 +131,59 @@ class Form {
         return $this;
     }
 
+    public function ajoutTitre(string $texte, array $attributs = []):self {
+        $this->formCode .= '<h1 ';
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
+        $this->formCode .= ">$texte</h1>";
+        return $this;
+    }
+
+    public function ajoutLien(string $texte, array $attributs = []):self {
+        $this->formCode .= '<a ';
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
+        $this->formCode .= ">$texte</a>";
+        return $this;
+    }
+
+    /**
+     * Ajoute un div autour des éléments du formulaire
+     *
+     * @param array $attributs Attributs du div
+     * @param callable $callback Fonction de rappel pour ajouter les éléments dans le div
+     * @return self
+     */
+    public function ajoutDiv(array $attributs, callable $callback):self {
+        $this->formCode .= "<div";
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
+        $this->formCode .= ">";
+
+        $callback($this);
+
+        $this->formCode .= "</div>";
+
+        return $this;
+    }
+
+    /**
+     * Ajoute le code php pour gérer l'affichage des erreurs
+     *
+     * @param string $errorMessage Le message d'erreur
+     * @return self
+     */
+    public function ajoutErr(string $errorMessage):self {
+        if (!empty($errorMessage)) {
+            $this->formCode .= "<div class='alert alert-danger' role='alert'>$errorMessage</div>";
+        }
+
+        return $this;
+    }
+
+    public function ajoutSuccess(string $successMsg):self {
+        if (!empty($successMsg)) {
+            $this->formCode .= "<div class='alert alert-success' role='alert'>$successMsg</div>";
+        }
+
+        return $this;
+    }
 
 }
