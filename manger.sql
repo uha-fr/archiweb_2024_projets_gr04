@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 26 jan. 2024 à 10:31
+-- Généré le : mer. 31 jan. 2024 à 10:54
 -- Version du serveur : 8.0.31
 -- Version de PHP : 7.3.12
 
@@ -390,6 +390,21 @@ INSERT INTO `aliment` (`id`, `nom`) VALUES
 (708, 'Crevette'),
 (709, 'Pomme de terre'),
 (710, 'Huile d\'olive');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `planning_recette`
+--
+
+DROP TABLE IF EXISTS `planning_recette`;
+CREATE TABLE IF NOT EXISTS `planning_recette` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_recette` int NOT NULL,
+  `id_user` int NOT NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
