@@ -5,23 +5,26 @@ namespace App\Controllers;
 use App\Core\Form;
 use App\Models\UtilisateurModel;
 
-class UtilisateurController extends Controller {
+class UtilisateurController extends Controller
+{
 
-    public function index() {
-        header('Location: http://manger/utilisateur/login');
-        exit();
+    public function index()
+    {
+        $controller = new UtilisateurController;
+        $controller->login();
     }
 
     /**
      * Formulaire de connexion
      */
-    public function login() {
+    public function login()
+    {
         session_start();
 
         if (isset($_SESSION['utilisateur'])) {
             // Utilisateur déjà connecté, redirection vers la page d'accueil
-            header('Location: http://manger/');
-            exit();
+            $controller = new AccueilController;
+            $controller->index();
         }
 
         // Vérification si erreurs
@@ -34,24 +37,27 @@ class UtilisateurController extends Controller {
 
         // Génération du formulaire
         $form = new Form;
-        $form->debutForm('post',  'checkLogin', ['class' => 'border shadow p-3 rounded',
-                                                                'style' => 'width: 450px'])
+        $form->debutForm('post',  'checkLogin', ['class' => 'border shadow p-3 rounded', 'style' => 'width: 450px'])
             ->ajoutTitre('Connexion', ['class' => 'text-center p3'])
             ->ajoutErr($errorMessage)
             ->ajoutSuccess($successMessage)
-            ->ajoutDiv(['class' => 'mb-3'], function($form) {
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
                 $defaultValue = $_SESSION['last_username_attempt'] ?? '';
                 $form->ajoutLabelFor('username', 'Nom d\'utilisateur', ['class' => 'form-label'])
                     ->ajoutInput('text', 'username', ['class' => 'form-control', 'id' => 'username', 'required' => true, 'value' => $defaultValue]);
             })
-            ->ajoutDiv(['class' => 'mb-3'], function($form) {
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
                 $form->ajoutLabelFor('password', 'Mot de passe', ['class' => 'form-label'])
                     ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'password', 'required' => true]);
             })
-            ->ajoutBouton('Confirmer', ['type' => 'submit',
-                                            'class' => 'btn btn-primary'])
-            ->ajoutLien('S\'inscrire', ['href' => 'signIn',
-                                            'class' => 'btn btn-link'])
+            ->ajoutBouton('Confirmer', [
+                'type' => 'submit',
+                'class' => 'btn btn-primary'
+            ])
+            ->ajoutLien('S\'inscrire', [
+                'href' => 'signIn',
+                'class' => 'btn btn-link'
+            ])
             ->finForm();
 
 
@@ -61,17 +67,18 @@ class UtilisateurController extends Controller {
         $this->render('utilisateur/login.php', [
             'form' => $form->create()
         ], 'empty.php');
-
     }
 
     /**
      * Après soumission du login
      */
-    public function checkLogin() {
+    public function checkLogin()
+    {
         session_start();
 
         if (isset($_POST['username']) && isset($_POST['password'])) {
-            function test_input($data): string {
+            function test_input($data): string
+            {
                 $data = trim($data);
                 $data = stripslashes($data);
                 return htmlspecialchars($data);
@@ -82,8 +89,10 @@ class UtilisateurController extends Controller {
             $password = hash('sha256', $password);
 
             $utilisateurModel = new UtilisateurModel();
-            $result = $utilisateurModel->findBy(['nom_utilisateur' => $username,
-                                                'mdp' => $password]);
+            $result = $utilisateurModel->findBy([
+                'nom_utilisateur' => $username,
+                'mdp' => $password
+            ]);
 
             if (!empty($result)) {
                 // var_dump($result);
@@ -95,9 +104,8 @@ class UtilisateurController extends Controller {
                         'nom_utilisateur' => $result[0]->nom_utilisateur
                     ];
 
-                    header('Location: http://manger/');
-                    exit();
-
+                    $controller = new AccueilController;
+                    $controller->index();
                 } else
                     $this->saveErrAndRedirect();
             } else
@@ -109,20 +117,21 @@ class UtilisateurController extends Controller {
     /**
      * Fonction qui gère la déconnexion
      */
-    public function logout() {
+    public function logout()
+    {
         session_start();
 
         session_unset();
         session_destroy();
-
-        header('Location: http://manger/');
-        exit();
+        $controller = new AccueilController;
+        $controller->index();
     }
 
     /**
      * Formulaire d'inscription
      */
-    public function signIn() {
+    public function signIn()
+    {
         session_start();
 
         $errorMessage = $_SESSION['sign_in_error'] ?? '';
@@ -130,33 +139,39 @@ class UtilisateurController extends Controller {
 
         // Génération du formulaire
         $form = new Form;
-        $form->debutForm('post',  'addUser', ['class' => 'border shadow p-3 rounded',
-            'style' => 'width: 450px'])
+        $form->debutForm('post',  'addUser', [
+            'class' => 'border shadow p-3 rounded',
+            'style' => 'width: 450px'
+        ])
             ->ajoutTitre('Inscription', ['class' => 'text-center p3'])
             ->ajoutErr($errorMessage)
-            ->ajoutDiv(['class' => 'mb-3'], function($form) {
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
                 $defaultValue = $_SESSION['last_username_attempt'] ?? '';
                 $form->ajoutLabelFor('username', 'Nom d\'utilisateur', ['class' => 'form-label'])
                     ->ajoutInput('text', 'username', ['class' => 'form-control', 'id' => 'username', 'required' => true, 'value' => $defaultValue]);
             })
-            ->ajoutDiv(['class' => 'mb-3'], function($form) {
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
                 $form->ajoutLabelFor('password', 'Mot de passe', ['class' => 'form-label'])
                     ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'password', 'required' => true]);
             })
-            ->ajoutDiv(['class' => 'mb-3'], function($form) {
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
                 $form->ajoutLabelFor('confirm_password', 'Confirmer le mot de passe', ['class' => 'form-label'])
                     ->ajoutInput('password', 'confirm_password', ['class' => 'form-control', 'id' => 'confirm_password', 'required' => true]);
             })
-            ->ajoutDiv(['class' => 'mb-3'], function($form) {
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
                 $defaultValue = $_SESSION['last_email_attempt'] ?? '';
                 $form->ajoutLabelFor('email', 'Email', ['class' => 'form-label'])
                     ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email', 'required' => true, 'value' => $defaultValue]);
             })
-            ->ajoutBouton('S\'inscrire', ['type' => 'submit',
-                'class' => 'btn btn-primary'])
-            ->ajoutLien('Se connecter', ['href' => 'login',
-                                            'class' => 'btn btn-link'])
-        ->finForm();
+            ->ajoutBouton('S\'inscrire', [
+                'type' => 'submit',
+                'class' => 'btn btn-primary'
+            ])
+            ->ajoutLien('Se connecter', [
+                'href' => 'login',
+                'class' => 'btn btn-link'
+            ])
+            ->finForm();
 
         unset($_SESSION['last_username_attempt']);
         unset($_SESSION['last_email_attempt']);
@@ -170,7 +185,8 @@ class UtilisateurController extends Controller {
     /**
      * Après soumission du formulaire d'inscription
      */
-    public function addUser() {
+    public function addUser()
+    {
         session_start();
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -203,10 +219,9 @@ class UtilisateurController extends Controller {
             }
 
             $this->saveSuccessAndRedirectToLogin('Inscription réussie, veuillez vous connecter !');
-
         } else {
             header("Location: ../inscription.php");
-            exit();
+            //exit();
         }
     }
 
@@ -221,8 +236,8 @@ class UtilisateurController extends Controller {
         // Message d'erreur à afficher
         $_SESSION['login_error'] = 'Nom d\'utilisateur ou mot de passe incorrect !';
         // Redirection vers la page de login
-        header('Location: http://manger/utilisateur/login');
-        exit();
+        $controller = new UtilisateurController;
+        $controller->login();
     }
 
     /**
@@ -238,8 +253,8 @@ class UtilisateurController extends Controller {
         // Message d'erreur à afficher
         $_SESSION['sign_in_error'] = $errMsg;
         // Redirection vers la page de login
-        header('Location: http://manger/utilisateur/signIn');
-        exit();
+        $controller = new UtilisateurController;
+        $controller->signIn();
     }
 
     /**
@@ -251,7 +266,7 @@ class UtilisateurController extends Controller {
         // Message de succès à afficher
         $_SESSION['sign_in_success'] = $successMsg;
         // Redirection vers la page de login
-        header('Location: http://manger/utilisateur/login');
-        exit();
+        $controller = new UtilisateurController;
+        $controller->login();
     }
 }

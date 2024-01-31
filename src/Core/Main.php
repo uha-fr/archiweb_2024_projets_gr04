@@ -50,8 +50,8 @@ class Main {
             }
 
         }else{
-            header('Location: http://manger/accueil');
-            exit();
+            $controller = new AccueilController;
+            $controller->index();
         }
     }
 }

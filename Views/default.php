@@ -16,9 +16,9 @@
 
         if(isset($_SESSION['utilisateur'])) : ?>
             <span>Bienvenue, <?= $_SESSION['utilisateur']['nom_utilisateur'] ?></span>
-            <a href="http://manger/utilisateur/logout">Déconnexion</a>
+            <a href="utilisateur/logout">Déconnexion</a>
         <?php else : ?>
-            <a href="http://manger/utilisateur/login">Connexion</a>
+            <a href="utilisateur/login">Connexion</a>
         <?php endif; ?>
     </nav>
     <div class="conteneur"><?= $contenu ?></div>
