@@ -28,6 +28,15 @@ class RecetteModel extends Model {
         return $query->fetchAll(); 
     }
 
+    public function countAllRecettes() {
+        return $this->executeQuery('SELECT count(recette.id) AS nbRecette FROM ' . $this->table)->fetch();
+    }
+
+    public function findByLimits(int $premierItem, int $nbItem) {
+        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' ORDER BY nom LIMIT ' . $premierItem . ', ' . $nbItem);
+        return $query->fetchAll();
+    }
+
     /**
      * Get the value of id
      */ 

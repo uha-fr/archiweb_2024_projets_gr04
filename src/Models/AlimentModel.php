@@ -16,6 +16,15 @@ class AlimentModel extends Model {
         return $query->fetchAll();
     }
 
+    public function countAllAliments() {
+        return $this->executeQuery('SELECT count(aliment.id) AS nbAliment FROM ' . $this->table)->fetch();
+    }
+
+    public function findByLimits(int $premierItem, int $nbItem) {
+        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' ORDER BY nom LIMIT ' . $premierItem . ', ' . $nbItem);
+        return $query->fetchAll();
+    }
+
     /**
      * Get the value of nom
      */ 

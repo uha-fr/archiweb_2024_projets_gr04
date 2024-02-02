@@ -31,7 +31,7 @@ class Main {
             $params = explode('/', $_GET['p']);
 
         
-        if($params[0] != '') {
+        if(isset($params[0]) && $params[0] != '') {
             //Récupération du nom du controller
             $controller = '\\App\\Controllers\\'.ucfirst(array_shift($params)).'Controller';
         
