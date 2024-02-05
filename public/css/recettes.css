@@ -1,0 +1,113 @@
+main {
+    display: flex;
+    padding: 0 30px;
+}
+
+/* Liste des recettes */
+.recettes-list {
+    width: 60%;
+}
+
+.ligne-recette {
+    cursor: pointer;
+}
+
+/* Frigo */
+.frigo {
+    width: 40%;
+    margin-left: 100px;
+}
+
+#resultatsAliments { /* ul */
+    position: absolute;
+    top: 102px;
+    list-style-type: none;
+    max-height: 200px;
+    overflow: auto;
+    background-color: white;
+    padding: 0;
+    width: 192px;
+}
+
+#resultatsAliments > li {
+    border: solid 1px black;
+    padding: 5px 5px;
+    cursor: pointer;
+}
+
+#resultatsAliments > li:hover {
+    background-color: aliceblue;
+}
+
+.frigo-sub {
+    display: flex;
+    margin: 10px 0;
+}
+
+#monFrigo {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#monFrigo > li {
+    width: 30%; 
+    margin: 10px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid black 1px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
+
+.aliment-frigo-cross {
+    text-decoration: none;
+
+}
+
+
+/* button */
+.button-26 {
+  appearance: button;
+  background-color: #1652F0;
+  border: 1px solid #1652F0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: Graphik,-apple-system,system-ui,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+  font-size: 14px;
+  line-height: 1.15;
+  overflow: visible;
+  padding: 10px 16px;
+  text-align: center;
+  text-transform: none;
+  transition: all 80ms ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: fit-content;
+}
+
+.button-26:disabled {
+  opacity: .5;
+}
+
+.button-26:focus {
+  outline: 0;
+}
+
+.button-26:hover {
+  background-color: #0A46E4;
+  border-color: #0A46E4;
+}
+
+.button-26:active {
+  background-color: #0039D7;
+  border-color: #0039D7;
+}
