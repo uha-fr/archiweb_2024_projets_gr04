@@ -1,29 +1,30 @@
-# archiweb_2024_projets_gr04
-#Archiweb Projet 'MANGER' - ELLOUZATI Mohamed / NICOD Théo / SCHLAGETER Alex
-
-Ce projet est une application qui a pour objectif de gérer son alimentation...
+# Archiweb Projet 'MANGER' - ELLOUZATI Mohamed / NICOD Théo / SCHLAGETER Alex
+Cette application est un outils permettant de suivre son alimentation
 
 ## Prérequis
 Intallez un environement WAMP, LAMP ou MAMP selon votre système d'exploitation
 
-Versions requises pour ce projet :
+Versions requises :
+
 PHP 7.3.13 
 MySQL 8.0.X
 
 Installez le gestionnaire de paquet PHP Composer : https://getcomposer.org/download/
-Puis ajoutez le chemin C:/xxx/composer en tant que variable d'environnement
-
-## Mettre en place la base de données
-Dans votre interface de base de données MySQL, importez la base de données "XXXXXXXX"
-
-Exemple sur PHPMYADMIN :
+Suivez la documentation
 
 ## Configuration du projet
-Commencez par récupérer le projet : 
-    git clone ".git"
+Récupérez le projet à la racine du dossier www/ de votre environnement AMP (sinon avec un virtual host) :
+    `git clone https://github.com/uha-fr/archiweb_2024_projets_gr04.git`
     
-A la racine du projet, exécutez les commandes :
-    composer install
-    composer dump-autoload
+À la racine du projet, exécutez les commandes :
 
-## Configuration des variables d'environnement
+    `composer install`
+    `composer dump-autoload`
+
+À la racine du projet, créez un fichier .env en prenant exemple sur le contenu du fichier .env.example et renseignez vos informations de base de données.
+
+## Mettre en place la base de données
+Dans votre système de base de données, importez la base de données "manger.sql" disponible à la racine du projet.
+
+## Lancer le projet
+Si tout est mis en place correctement, vous pouvez accédez à l'application depuis http://localhost/archiweb_2024_projets_gr04/ (ou depuis votre virtual host)
