@@ -1,6 +1,6 @@
 main {
     display: flex;
-    
+    padding: 0 30px;
 }
 
 /* Liste des recettes */
@@ -20,11 +20,13 @@ main {
 
 #resultatsAliments { /* ul */
     position: absolute;
+    top: 102px;
     list-style-type: none;
     max-height: 200px;
     overflow: auto;
     background-color: white;
     padding: 0;
+    width: 192px;
 }
 
 #resultatsAliments > li {

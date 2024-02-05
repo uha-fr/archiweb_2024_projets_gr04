@@ -92,8 +92,10 @@
         $('#boutonAddFrigo').on('click', function(e) {
             e.preventDefault();
             let alimentUser = $('#monAliment').val();
-            let alimentTrouve = aliments.find(item => item.nom.toLowerCase() === alimentUser.toLowerCase());
-            let alimentTrouveFrigo = frigo.find(item => item.nom.toLowerCase() === alimentUser.toLowerCase());
+            if(aliments != undefined) {
+                var alimentTrouve = aliments.find(item => item.nom.toLowerCase() === alimentUser.toLowerCase());
+                var alimentTrouveFrigo = frigo.find(item => item.nom.toLowerCase() === alimentUser.toLowerCase());
+            }
 
             if (alimentTrouve != undefined && alimentTrouveFrigo == undefined) {
                 $('#monAliment').val('');
@@ -122,7 +124,6 @@
 
                 //Ajout dans localStorage
                 let frigoItems = localStorage.getItem('frigo');
-                console.log(frigoItems);
                 if(frigoItems != null) {
                     frigoItems = JSON.parse(frigoItems);
                 }else{
@@ -131,8 +132,6 @@
                 frigoItems.push(alimentTrouve);
                 localStorage.setItem('frigo', JSON.stringify(frigoItems));
 
-                console.log("frigo",frigo);
-        console.log("local", localStorage.getItem('frigo'));
             }
         });
 
