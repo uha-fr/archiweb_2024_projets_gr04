@@ -9,18 +9,13 @@ class Database extends PDO {
 
     private static $instance;
 
-    private const DBHOST = 'localhost';
-    private const DBUSER = 'root';
-    private const DBPASS = '';
-    private const DBNAME = 'manger';
-
     private function __construct() {
         //dsn de connexion
-        $_dsn = 'mysql:dbname=' .  self::DBNAME .  ';host=' . self::DBHOST;
+        $_dsn = 'mysql:dbname=' .  $_ENV['DBNAME'] .  ';host=' . $_ENV['DBHOST'];
 
         //On appelle du constructeur de la classe PDO
         try {
-            parent::__construct($_dsn, self::DBUSER, self::DBPASS);
+            parent::__construct($_dsn, $_ENV['DBUSER'], $_ENV['DBPASS']);
 
             $this->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAME utf8');
             $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
