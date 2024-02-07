@@ -6,6 +6,12 @@ use App\Core\Main;
 
 define('ROOT', __DIR__);
 
+if($_SERVER['HTTP_HOST'] == 'localhost') {
+    define('HOST', 'archiweb_2024_projets_gr04');
+}else{
+    define('HOST', $_SERVER['HTTP_HOST']);
+}
+
 //.env
 Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '.')->load();
 

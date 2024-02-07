@@ -23,8 +23,8 @@ class UtilisateurController extends Controller
 
         if (isset($_SESSION['utilisateur'])) {
             // Utilisateur déjà connecté, redirection vers la page d'accueil
-            $controller = new AccueilController;
-            $controller->index();
+            header('Location: ../accueil');
+            exit;
         }
 
         // Vérification si erreurs
@@ -104,8 +104,9 @@ class UtilisateurController extends Controller
                         'nom_utilisateur' => $result[0]->nom_utilisateur
                     ];
 
-                    $controller = new AccueilController;
-                    $controller->index();
+                    //header('Location: /' . HOST . '/accueil');
+                    header('Location: ../accueil');
+                    exit;
                 } else
                     $this->saveErrAndRedirect();
             } else
@@ -123,8 +124,8 @@ class UtilisateurController extends Controller
 
         session_unset();
         session_destroy();
-        $controller = new AccueilController;
-        $controller->index();
+        header('Location: ../accueil');
+        exit;
     }
 
     /**
@@ -221,7 +222,7 @@ class UtilisateurController extends Controller
             $this->saveSuccessAndRedirectToLogin('Inscription réussie, veuillez vous connecter !');
         } else {
             header("Location: ../inscription.php");
-            //exit();
+            exit;
         }
     }
 
