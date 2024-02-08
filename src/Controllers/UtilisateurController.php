@@ -19,7 +19,7 @@ class UtilisateurController extends Controller
      */
     public function login()
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
         if (isset($_SESSION['utilisateur'])) {
             // Utilisateur déjà connecté, redirection vers la page d'accueil
@@ -74,7 +74,7 @@ class UtilisateurController extends Controller
      */
     public function checkLogin()
     {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
         if (isset($_POST['username']) && isset($_POST['password'])) {
             function test_input($data): string
