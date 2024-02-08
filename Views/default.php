@@ -15,7 +15,7 @@
 
         if(isset($_SESSION['utilisateur'])) : ?>
             <span>Bienvenue, <?= $_SESSION['utilisateur']['nom_utilisateur'] ?></span>
-            <a href="/<?= HOST ?>/utilisateur/logout">Déconnexion</a>
+            <a href="utilisateur/logout">Déconnexion</a>
         <?php else : ?>
             <a href="utilisateur/login">Connexion</a>
         <?php endif; ?>
