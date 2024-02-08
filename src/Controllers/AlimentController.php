@@ -14,7 +14,7 @@ class AlimentController extends Controller {
         $nbPage = ceil($nbALiment->nbAliment / $alimentsParPage);
 
         if(isset($_GET['page']) && !empty($_GET['page'])) {
-            $pageActuelle = (int) strip_tags($_GET['page']);
+            $pageActuelle = (int) $this->secure($_GET['page']);
             if($pageActuelle > $nbPage) {
                 $pageActuelle = $nbPage;
             }

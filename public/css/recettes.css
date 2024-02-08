@@ -20,28 +20,24 @@ main {
 
 #resultatsAliments { /* ul */
     position: absolute;
-    top: 102px;
+    top: 104px;
     list-style-type: none;
     max-height: 200px;
     overflow: auto;
     background-color: white;
     padding: 0;
-    width: 192px;
+    width: 340px;
 }
 
 #resultatsAliments > li {
     border: solid 1px black;
-    padding: 5px 5px;
+    padding: 10px 5px;
     cursor: pointer;
+    font-weight: 600;
 }
 
 #resultatsAliments > li:hover {
     background-color: aliceblue;
-}
-
-.frigo-sub {
-    display: flex;
-    margin: 10px 0;
 }
 
 #monFrigo {
@@ -53,14 +49,13 @@ main {
 }
 
 #monFrigo > li {
-    width: 30%; 
+    width: 40%; 
+    height: 40px;
     margin: 10px; 
     display: flex;
     align-items: center;
-    justify-content: center;
     border: solid black 1px;
     border-radius: 5px;
-    display: flex;
     justify-content: space-between;
     padding: 0px 10px;
 }
@@ -70,44 +65,16 @@ main {
 
 }
 
-
-/* button */
-.button-26 {
-  appearance: button;
-  background-color: #1652F0;
-  border: 1px solid #1652F0;
-  border-radius: 4px;
-  box-sizing: border-box;
-  color: #FFFFFF;
-  cursor: pointer;
-  font-family: Graphik,-apple-system,system-ui,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
-  font-size: 14px;
-  line-height: 1.15;
-  overflow: visible;
-  padding: 10px 16px;
-  text-align: center;
-  text-transform: none;
-  transition: all 80ms ease-in-out;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: fit-content;
+.hover:hover{
+    background-color: aliceblue;
+    border-radius: 50px;
 }
 
-.button-26:disabled {
-  opacity: .5;
+.spe {
+    display: flex;
+    gap: 3px;
 }
 
-.button-26:focus {
-  outline: 0;
-}
-
-.button-26:hover {
-  background-color: #0A46E4;
-  border-color: #0A46E4;
-}
-
-.button-26:active {
-  background-color: #0039D7;
-  border-color: #0039D7;
+.spe > div {
+    width: 100%;
 }

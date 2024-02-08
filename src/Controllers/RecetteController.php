@@ -20,7 +20,7 @@ class RecetteController extends Controller {
         $recettesParPage = 10;
 
         if(isset($_GET['page']) && !empty($_GET['page'])) {
-            $pageActuelle = (int) strip_tags($_GET['page']);
+            $pageActuelle = (int) $this->secure($_GET['page']);
         }else{
             $pageActuelle = 1;
         }
@@ -31,6 +31,9 @@ class RecetteController extends Controller {
                 if($this->valide($alimentsFrigo)) {
                     $recettes = $recetteModel->findByIdsAliments($alimentsFrigo);
                     setcookie('r', json_encode($recettes), time() + 3600, '/');
+                }else{
+                    header('Location: ./');
+                    exit;
                 }
             }else{
                 $recettes = json_decode($_COOKIE['r']);
@@ -54,21 +57,20 @@ class RecetteController extends Controller {
         }
 
         $formAliments = new Form;
-        $formAliments->debutForm()
-            ->ajoutInput('search', 'aliment', ['id' => 'monAliment', 'autocomplete' => 'off'])
-            ->ajoutBouton('Ajouter à mon frigo', ['id' => 'boutonAddFrigo', 'class' => 'button-26'])
-            ->finForm();
+        $formAliments->ajoutInput('search', 'aliment', ['id' => 'monAliment', 'placeholder' => 'Pomme de terre ...' ,'autocomplete' => 'off', 'class' => 'ps-2', 'style' => 'width: 340px;'])
+            ->ajoutBouton('+', ['id' => 'boutonAddFrigo', 'class' => 'btn btn-primary w-50']);
 
         $boutonTrouverRecettes = new Form;
-        $boutonTrouverRecettes->debutForm('post', '#', ['id' => 'formFindRecette'])
-            ->ajoutBouton('Trouver une recette', ['id' => 'findRecette', 'type' => 'sumbit', 'class' => 'button-26'])
+        $boutonTrouverRecettes->debutForm('post', '#', ['id' => 'formFindRecette', 'class' => 'w-100'])
+            ->ajoutBouton('Trouver une recette', ['id' => 'findRecette', 'type' => 'sumbit', 'class' => 'btn btn-primary w-100'])
             ->finForm();
 
         $btnEffacerFiltres = new Form;
         $btnEffacerFiltres->debutForm()
             ->ajoutInput('hidden', 'effacerFiltre')
-            ->ajoutBouton('Effacer les filtres', ['type' => 'submit', 'class' => 'button-26'])
+            ->ajoutBouton('Effacer les filtres', ['type' => 'submit', 'class' => 'btn border'])
             ->finForm();
+
 
         $this->render('recette/index.php', [
             'recettes' => $recettes,
@@ -77,20 +79,85 @@ class RecetteController extends Controller {
             'premierItem' => $premierItem,
             'pageActuelle' => $pageActuelle,
             'nbPage' => $nbPage,
-            'btnEffacerFiltres' => $btnEffacerFiltres->create()
+            'btnEffacerFiltres' => $btnEffacerFiltres->create(),
         ]);
     }
 
-    public function lire(int $id) {
+    public function lire(string $id) {
+        $id = $this->secure($id);
         $recetteModel = new RecetteModel();
         $recette = $recetteModel->find($id);
+
+        $retourBouton = new Form;
+        $retourBouton->ajoutLien('Retour', ['href' => '../', 'class' => 'btn btn-primary mb-3']);
 
         $alimentModel = new AlimentModel();
         $ingredients = $alimentModel->findAlimentsByRecetteId($id);
         $this->render('recette/lire.php', [
             'recette' => $recette,
-            'ingredients' => $ingredients
+            'ingredients' => $ingredients,
+            'retour' => $retourBouton->create(),
         ]);
+    }
+
+    public function ajouter() {
+        $erreurs = [];
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if(isset($_POST['nom']) && !empty($_POST['nom'])) {
+                $nomRecette = trim($this->secure($_POST['nom']));
+                $descriptionRecette = trim($this->secure($_POST['desc']));
+                if(isset($_POST['aliments'])) {
+
+                    $ingredients = $_POST['aliments'];
+
+                    if(! $this->valide($ingredients)) {
+                        header('Location: ../');
+                        exit;
+                    }
+                }
+                $recetteModel = new RecetteModel();
+                $recetteModel->newRecette($nomRecette, $descriptionRecette, $ingredients);
+                header('Location: ../recette');
+                exit;
+            }else{
+                $erreurs['nomVide'] = "Veuillez mettre un nom à votre recette";
+            }
+        }
+
+        $formDebut = new Form;
+        $formDebut->debutForm('post', '#', ['id' => 'formFindRecette'])
+            ->ajoutLabelFor('nom', 'Nom', [], true)
+            ->ajoutInput('text', 'nom', ['class' => 'form-control mt-1 mb-2', 'required'], true)
+            ->ajoutLabelFor('desc', 'Description', [], true)
+            ->ajoutTextArea('desc', '', ['class' => 'form-control mt-1 mb-2'], true);
+            
+        
+        $formFin = new Form;
+        $formFin->ajoutLien('Annuler', ['href' => '../recette', 'class' => 'btn w-25 border'])
+                ->ajoutBouton('Ajouter la recette', ['type' => 'submit', 'class' => 'btn btn-primary w-75'])
+                ->finForm();
+
+        $formAliments = new Form;
+        $formAliments->ajoutLabelFor('aliment', 'Ingrédient', [], true)
+            ->ajoutInput('search', 'aliment', ['id' => 'monAliment', 'autocomplete' => 'off', 'class' => 'form-control mt-1 mb-2'], true)
+            ->ajoutBouton('+', ['id' => 'boutonAddFrigo', 'class' => 'btn btn-primary', 'style' => 'height: 39px; margin-top: 27px;']);
+
+        $this->render('recette/ajouter.php', [
+            'formDebut' => $formDebut->create(),
+            'formFin' => $formFin->create(),
+            'formAliments' => $formAliments->create(),
+            'erreurs' => $erreurs,
+        ]);
+    }
+
+    public function supprimer(string $id) {
+        $id = $this->secure($id);
+
+        $recetteModel = new RecetteModel();
+        $recetteModel->supprimerRecetteById($id);
+
+        header('Location: ../');
+        exit;
     }
 
     private function valide(array $datas):bool {

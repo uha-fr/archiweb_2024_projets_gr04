@@ -30,8 +30,8 @@ class Model extends Database {
         return $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE ' . $listChamps, $valeurs)->fetchAll();
     }
 
-    public function find (int $id) {
-        return $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = ' . $id)->fetch();
+    public function find (string $id) {
+        return $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = \'' . $id . '\'')->fetch();
     }
 
     public function executeQuery(string $sql, array $attributs = null){
@@ -98,4 +98,5 @@ class Model extends Database {
         }
         return $this;
     }
+
 }

@@ -38,6 +38,42 @@ class RecetteModel extends Model {
     }
 
     /**
+     * Ajoute une recette et ses aliments associés
+     *
+     * @param string $nom
+     * @param string $desc
+     * @param array $ingredients
+     * @return void
+     */
+    public function newRecette(string $nom, string $desc = '', array $ingredients) {
+        $idRecette = uniqid();
+        $queryRecette = 'INSERT INTO ' . $this->table . ' (`id`, `nom`, `description`) VALUES (?, ?, ?)';
+        $this->executeQuery($queryRecette, [$idRecette, $nom, $desc]);
+
+        if(!empty($ingredients)) {
+            $queryRecetteAliments = 'INSERT INTO recette_aliment (id_recette, id_aliment) VALUES ';
+            $valeurs = [];
+            foreach($ingredients as $index => $idIngredient) {
+                $valeurs[] = $idRecette;
+                $valeurs[] = $idIngredient;
+                $queryRecetteAliments .= '(?, ?)';
+                if($index < count($ingredients) - 1) {
+                    $queryRecetteAliments .= ', ';
+                }
+            }
+            $this->executeQuery($queryRecetteAliments, $valeurs);
+        }
+    }
+
+    public function supprimerRecetteById(string $id) {
+        $queryAliments = 'DELETE FROM recette_aliment WHERE id_recette = ?';
+        $this->executeQuery($queryAliments, [$id]);
+
+        $queryRecette = 'DELETE FROM ' . $this->table . ' WHERE id = ?';
+        $this->executeQuery($queryRecette, [$id]);
+    }
+
+    /**
      * Get the value of id
      */ 
     public function getId()
