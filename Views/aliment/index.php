@@ -1,9 +1,9 @@
-<div>
+<main class="px-4">
     <section class="col-12">
-        <h3>Listes des produits</h3>
+        <h3>Aliments et Produits</h3>
         <table class="table">
             <thead>
-                <th>Id</th>
+                <th>N°</th>
                 <th>Nom</th>
             </thead>
             <tbody>
@@ -32,4 +32,4 @@
             </ul>
         </nav>
     </section>
-</div>
+</main>

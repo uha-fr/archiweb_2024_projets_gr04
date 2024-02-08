@@ -44,8 +44,8 @@ class Form {
         $courts = ['checked', 'disabled', 'readonly', 'multiple', 'required', 'autofocus', 'novalidate', 'formnovalidate'];
 
         foreach($attributs as $attribut => $valeur) {
-            if(in_array($attribut, $courts) && $valeur == true) {
-                $str .= " $attribut";
+            if(in_array($valeur, $courts) && $valeur == true) {
+                $str .= " $valeur";
             }else{
                 $str .= " $attribut='$valeur'";
             }
@@ -90,8 +90,10 @@ class Form {
      * @param array $attributs
      * @return self
      */
-    public function ajoutLabelFor(string $for, string $texte, array $attributs = []):self {
-        
+    public function ajoutLabelFor(string $for, string $texte, array $attributs = [], bool $div = false):self {
+        if($div) {
+            $this->formCode .= '<div class="form-group">';
+        }
         $this->formCode .= "<label for='$for'";
         $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
         $this->formCode .= ">$texte</label>";
@@ -99,18 +101,23 @@ class Form {
         return $this;
     }
 
-    public function ajoutInput(string $type, string $nom, array $attributs = []):self {
+    public function ajoutInput(string $type, string $nom, array $attributs = [], bool $div = false):self {
         $this->formCode .= "<input type='$type' name='$nom'";
         $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) . '>' : '>';
-
+        if($div) {
+            $this->formCode .= '</div>';
+        }
         return $this;
     }
     
-    public function ajoutTextArea(string $nom, string $texte = '', array $attributs = []):self {
+    public function ajoutTextArea(string $nom, string $texte = '', array $attributs = [],  bool $div = false):self {
+        
         $this->formCode .= "<textarea name='$nom'";
         $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
         $this->formCode .= ">$texte</textarea>";
-
+        if($div) {
+            $this->formCode .= '</div>';
+        }
         return $this;
     }
 

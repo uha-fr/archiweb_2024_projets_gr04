@@ -9,20 +9,19 @@ use App\Controllers\AccueilController;
  */
 class Main {
     public function start() {
-    
         // Nettoyage de l'URL et enlèvement de duplication d'URL
         //Récupération de l'URL
         $uri = $_SERVER['REQUEST_URI'];
 
         if(!empty($uri) && $uri != '/' && $uri[-1] === '/'){
             //On enlève le /
-            $uri = substr($uri, 0, -1);
-
+            $uri2 = substr($uri, 0, -1);
+            
             //Envoi de code de redirection permanente
             http_response_code(301);
 
             //Redirection vers l'URL sans /
-            header('Location' . $uri);
+            header('Location: ' . $uri2);
         }
 
         //Séparage des paramètres de l'URL dans un tableau
@@ -34,7 +33,6 @@ class Main {
         if(isset($params[0]) && $params[0] != '') {
             //Récupération du nom du controller
             $controller = '\\App\\Controllers\\'.ucfirst(array_shift($params)).'Controller';
-        
             //Instanciation du controller
             $controller = new $controller();
 

@@ -17,4 +17,8 @@ abstract class Controller {
 
         require_once ROOT . '/Views/' . $template;
     }
+
+    function secure($string) {
+        return htmlspecialchars(strip_tags($string));
+    }
 }

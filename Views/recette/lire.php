@@ -1,4 +1,5 @@
 <main class="p-4">
+    <?= $retour ?>
     <h2><?= $recette->nom ?></h2>
     <p><?= $recette->description ?></p>
 
