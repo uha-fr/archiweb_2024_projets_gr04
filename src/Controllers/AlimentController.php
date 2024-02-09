@@ -7,6 +7,12 @@ use App\Models\AlimentModel;
 class AlimentController extends Controller {
 
     public function index() {
+        session_start();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
         $alimentModel = new AlimentModel();
 
         $alimentsParPage = 14;
@@ -35,6 +41,12 @@ class AlimentController extends Controller {
     }
 
     public function recupererAliments() {
+        session_start();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
         $alimentModel = new AlimentModel();
         $aliments = $alimentModel->findAll();
 

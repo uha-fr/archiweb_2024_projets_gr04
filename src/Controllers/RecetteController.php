@@ -10,7 +10,10 @@ class RecetteController extends Controller {
 
     public function index() {
         session_start();
-        $this->verifUtilisateurConnecte();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: utilisateur/login');
+            exit;
+        }
 
         if (isset($_POST['effacerFiltre'])) {
             setcookie('r', '', time() - 3600, '/');
@@ -87,7 +90,10 @@ class RecetteController extends Controller {
 
     public function lire(string $id) {
         session_start();
-        $this->verifUtilisateurConnecte();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: utilisateur/login');
+            exit;
+        }
 
         $id = $this->secure($id);
         $recetteModel = new RecetteModel();
@@ -110,7 +116,10 @@ class RecetteController extends Controller {
 
     public function ajouter() {
         session_start();
-        $this->verifUtilisateurConnecte();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: utilisateur/login');
+            exit;
+        }
 
         $erreurs = [];
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -163,7 +172,10 @@ class RecetteController extends Controller {
 
     public function supprimer(string $id) {
         session_start();
-        $this->verifUtilisateurConnecte();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: utilisateur/login');
+            exit;
+        }
 
         $id = $this->secure($id);
 
