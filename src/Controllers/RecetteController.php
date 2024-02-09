@@ -9,6 +9,8 @@ use App\Models\AlimentModel;
 class RecetteController extends Controller {
 
     public function index() {
+        session_start();
+        $this->verifUtilisateurConnecte();
 
         if (isset($_POST['effacerFiltre'])) {
             setcookie('r', '', time() - 3600, '/');
@@ -84,9 +86,15 @@ class RecetteController extends Controller {
     }
 
     public function lire(string $id) {
+        session_start();
+        $this->verifUtilisateurConnecte();
+
         $id = $this->secure($id);
         $recetteModel = new RecetteModel();
-        $recette = $recetteModel->find($id);
+        $recette = $recetteModel->findByUser($id);
+        if($recette == null) {
+            exit('La page recherchée n\'existe pas');
+        } 
 
         $retourBouton = new Form;
         $retourBouton->ajoutLien('Retour', ['href' => '../', 'class' => 'btn btn-primary mb-3']);
@@ -101,6 +109,9 @@ class RecetteController extends Controller {
     }
 
     public function ajouter() {
+        session_start();
+        $this->verifUtilisateurConnecte();
+
         $erreurs = [];
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['nom']) && !empty($_POST['nom'])) {
@@ -151,6 +162,9 @@ class RecetteController extends Controller {
     }
 
     public function supprimer(string $id) {
+        session_start();
+        $this->verifUtilisateurConnecte();
+
         $id = $this->secure($id);
 
         $recetteModel = new RecetteModel();

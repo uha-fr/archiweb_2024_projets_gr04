@@ -21,4 +21,11 @@ abstract class Controller {
     function secure($string) {
         return htmlspecialchars(strip_tags($string));
     }
+
+    function verifUtilisateurConnecte() {
+        if(!isset($_SESSION['utilisateur'])) {
+            header('Location: utilisateur/login');
+            exit;
+        }
+    }
 }

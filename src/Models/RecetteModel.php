@@ -24,16 +24,16 @@ class RecetteModel extends Model {
             $alias = "ra" . ($index + 1);  // Utilisation d'un alias unique pour chaque join
             $sqlJoins .= "JOIN recette_aliment $alias ON r.id = $alias.id_recette AND $alias.id_aliment = ? ";
         }
-        $query =  $this->executeQuery('SELECT r.id, r.nom FROM ' . $this->table . ' r ' . $sqlJoins, $ids);
+        $query =  $this->executeQuery('SELECT r.id, r.nom FROM ' . $this->table . ' r ' . $sqlJoins . ' WHERE id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'], $ids);
         return $query->fetchAll(); 
     }
 
     public function countAllRecettes() {
-        return $this->executeQuery('SELECT count(recette.id) AS nbRecette FROM ' . $this->table)->fetch();
+        return $this->executeQuery('SELECT count(recette.id) AS nbRecette FROM ' . $this->table . ' WHERE id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'])->fetch();
     }
 
     public function findByLimits(int $premierItem, int $nbItem) {
-        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' ORDER BY nom LIMIT ' . $premierItem . ', ' . $nbItem);
+        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'] . ' ORDER BY nom LIMIT ' . $premierItem . ', ' . $nbItem);
         return $query->fetchAll();
     }
 
@@ -47,8 +47,8 @@ class RecetteModel extends Model {
      */
     public function newRecette(string $nom, string $desc = '', array $ingredients) {
         $idRecette = uniqid();
-        $queryRecette = 'INSERT INTO ' . $this->table . ' (`id`, `nom`, `description`) VALUES (?, ?, ?)';
-        $this->executeQuery($queryRecette, [$idRecette, $nom, $desc]);
+        $queryRecette = 'INSERT INTO ' . $this->table . ' (`id`, `nom`, `description`, `id_utilisateur`) VALUES (?, ?, ?, ?)';
+        $this->executeQuery($queryRecette, [$idRecette, $nom, $desc, (int)$_SESSION['utilisateur']['id']]);
 
         if(!empty($ingredients)) {
             $queryRecetteAliments = 'INSERT INTO recette_aliment (id_recette, id_aliment) VALUES ';
@@ -69,8 +69,12 @@ class RecetteModel extends Model {
         $queryAliments = 'DELETE FROM recette_aliment WHERE id_recette = ?';
         $this->executeQuery($queryAliments, [$id]);
 
-        $queryRecette = 'DELETE FROM ' . $this->table . ' WHERE id = ?';
+        $queryRecette = 'DELETE FROM ' . $this->table . ' WHERE id = ? AND id_utilisateur = ' . $_SESSION['utilisateur']['id'];
         $this->executeQuery($queryRecette, [$id]);
+    }
+
+    public function findByUser(string $id) {
+        return $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = \'' . $id . '\' AND (id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'] . ')')->fetch();
     }
 
     /**

@@ -21,7 +21,9 @@
                         <tr class="ligne-recette" onclick="window.location='recette/lire/<?= $recette->id ?>'">
                             <td><?= $recette->nom ?></td>
                             <td>
-                                <a href="recette/supprimer/<?= $recette->id ?>" class="text-decoration-none ps-3 pe-3 pb-1 position-relative start-50 hover">x</a>
+                                <?php if($recette->id_utilisateur == $_SESSION['utilisateur']['id']): ?> 
+                                    <a href="recette/supprimer/<?= $recette->id ?>" class="text-decoration-none ps-3 pe-3 pb-1 position-relative start-50 hover">x</a>
+                                <?php endif ?>
                             </td>
                         </tr>
                     <?php endforeach ?>
