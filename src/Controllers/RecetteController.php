@@ -9,6 +9,11 @@ use App\Models\AlimentModel;
 class RecetteController extends Controller {
 
     public function index() {
+        session_start();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: ../utilisateur/login');
+            exit;
+        }
 
         if (isset($_POST['effacerFiltre'])) {
             setcookie('r', '', time() - 3600, '/');
@@ -84,6 +89,12 @@ class RecetteController extends Controller {
     }
 
     public function lire(string $id) {
+        session_start();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
         $id = $this->secure($id);
         $recetteModel = new RecetteModel();
         $recette = $recetteModel->find($id);
@@ -101,6 +112,12 @@ class RecetteController extends Controller {
     }
 
     public function ajouter() {
+        session_start();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
         $erreurs = [];
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['nom']) && !empty($_POST['nom'])) {
@@ -151,6 +168,12 @@ class RecetteController extends Controller {
     }
 
     public function supprimer(string $id) {
+        session_start();
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
         $id = $this->secure($id);
 
         $recetteModel = new RecetteModel();
