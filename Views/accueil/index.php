@@ -41,10 +41,11 @@
                         <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/01.jpg" alt="..." /></div>
                     </div>
                     <div class="col-lg-6 order-lg-1">
-                        <div class="p-5">
-                            <h2 class="display-4">Manger</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod aliquid, mollitia odio veniam sit iste esse assumenda amet aperiam exercitationem, ea animi blanditiis recusandae! Ratione voluptatum molestiae adipisci, beatae obcaecati.</p>
-                        </div>
+                    <div class="p-5">
+                        <h2 class="display-4">Bienvenue sur Manger!</h2>
+                        <p>Découvrez de nouvelles recettes, planifiez vos repas et suivez votre consommation nutritionnelle pour une vie plus saine et plus savoureuse. Rejoignez notre communauté de passionnés de la bonne cuisine et commencez à transformer votre façon de manger dès aujourd'hui.</p>
+                    </div>
+
                     </div>
                 </div>
             </div>
@@ -57,10 +58,11 @@
                         <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/02.jpg" alt="..." /></div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="p-5">
-                            <h2 class="display-4">Suivi</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod aliquid, mollitia odio veniam sit iste esse assumenda amet aperiam exercitationem, ea animi blanditiis recusandae! Ratione voluptatum molestiae adipisci, beatae obcaecati.</p>
-                        </div>
+                    <div class="p-5">
+                        <h2 class="display-4">Aliments à la Une</h2>
+                        <p>Plongez dans un univers de saveurs avec 'Manger' et découvrez une multitude d'aliments pour enrichir votre palette culinaire. De la sélection des meilleurs produits frais à l'exploration de saveurs exotiques, trouvez l'inspiration pour vos prochains repas et goûtez à la diversité culinaire.</p>
+                    </div>
+
                     </div>
                 </div>
             </div>
@@ -74,9 +76,10 @@
                     </div>
                     <div class="col-lg-6 order-lg-1">
                         <div class="p-5">
-                            <h2 class="display-4">AAAAA</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod aliquid, mollitia odio veniam sit iste esse assumenda amet aperiam exercitationem, ea animi blanditiis recusandae! Ratione voluptatum molestiae adipisci, beatae obcaecati.</p>
-                        </div>
+                        <h2 class="display-4">Recette et Planning</h2>
+                        <p>Trouvez l'inspiration quotidienne avec des recettes personnalisées et organisez votre semaine culinaire avec notre outil de planification des repas. Simplifiez vos courses et votre routine en cuisine grâce à 'Manger', votre assistant pour une alimentation délicieuse et organisée.</p>
+                    </div>
+
                     </div>
                 </div>
             </div>
