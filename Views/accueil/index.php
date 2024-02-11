@@ -6,7 +6,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Une application pour manger, planifier, préparer des recettes</title>
-        <link rel="icon" type="image/x-icon" href="public/images/img/favicon.ico" />
+        <!-- <link rel="icon" type="image/x-icon" href="public/images/img/favicon.ico" /> -->
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
@@ -17,7 +17,6 @@
     </head>
     <body id="page-top">
         <!-- Navigation-->
-        <?php include '../default.php'; ?>
 
         <!-- Header-->
         <header class="masthead text-center text-white">
@@ -38,7 +37,7 @@
             <div class="container px-5">
                 <div class="row gx-5 align-items-center">
                     <div class="col-lg-6 order-lg-2">
-                        <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/01.jpg" alt="..." /></div>
+                        <!-- <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/01.jpg" alt="..." /></div> -->
                     </div>
                     <div class="col-lg-6 order-lg-1">
                     <div class="p-5">
@@ -55,7 +54,7 @@
             <div class="container px-5">
                 <div class="row gx-5 align-items-center">
                     <div class="col-lg-6">
-                        <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/02.jpg" alt="..." /></div>
+                        <!-- <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/02.jpg" alt="..." /></div> -->
                     </div>
                     <div class="col-lg-6">
                     <div class="p-5">
@@ -72,7 +71,7 @@
             <div class="container px-5">
                 <div class="row gx-5 align-items-center">
                     <div class="col-lg-6 order-lg-2">
-                        <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/03.jpg" alt="..." /></div>
+                        <!-- <div class="p-5"><img class="img-fluid rounded-circle" src="assets/img/03.jpg" alt="..." /></div> -->
                     </div>
                     <div class="col-lg-6 order-lg-1">
                         <div class="p-5">
@@ -91,6 +90,6 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="public/src/scripts.js"></script>
+        <!-- <script src="public/src/scripts.js"></script> -->
     </body>
 </html>
