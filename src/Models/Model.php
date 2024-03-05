@@ -10,13 +10,22 @@ class Model extends Database {
 
     private $db;
 
-    // SELECT * FROM table
+    /**
+     * Récupère tous les champs de la table courante
+     *
+     * @return array
+     */
     public function findAll():array {
         $query = $this->executeQuery('SELECT * FROM ' . $this->table);
         return $query->fetchAll();
     }
 
-    // SELECT * FROM table WHERE criteres
+    /**
+     * Récupère les champs de la table courante selon les critères
+     *
+     * @param array $criteres Tableau associatif des critères
+     * @return array
+     */
     public function findBy(array $criteres):array {
         $champs = [];
         $valeurs = [];
@@ -31,21 +40,46 @@ class Model extends Database {
         return $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE ' . $listChamps, $valeurs)->fetchAll();
     }
 
+    /**
+     * Récupère un champs selon son identifiant
+     *
+     * @param string $id Identifiant du champs
+     * @return object
+     */
     public function find (string $id) {
         $query =  $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = \'' . $id . '\'');
         $query->setFetchMode(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
         return $query->fetch();
     }
 
+    /**
+     * Compte le nombre de champs dans la table courante
+     *
+     * @return object
+     */
     public function countAll() {
         return $this->executeQuery('SELECT count(*) AS items FROM ' . $this->table)->fetch();
     }
 
+    /**
+     * Récupère les champs selon un intervalle
+     *
+     * @param integer $premierItem Début de l'intervalle
+     * @param integer $nbItem Taille de l'intervalle
+     * @return object
+     */
     public function findByLimitsGeneral(int $premierItem, int $nbItem) {
         $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' LIMIT ' . $premierItem . ', ' . $nbItem);
         return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
     }
 
+    /**
+     * Exécute une requête SQL sur la base de données.
+     *
+     * @param string $sql La requête SQL à exécuter.
+     * @param array|null $attributs Les attributs à utiliser dans la requête préparée (optionnel).
+     * @return object L'objet de requête préparée ou le résultat de la requête directe.
+     */
     public function executeQuery(string $sql, array $attributs = null){
 
         $this->db = Database::getInstance();
@@ -59,26 +93,31 @@ class Model extends Database {
         }
     }
 
-    public function create(){
-        $champs = [];
-        $inter = [];
-        $valeurs = [];
+    // public function create(){
+    //     $champs = [];
+    //     $inter = [];
+    //     $valeurs = [];
 
-        foreach($this as $champ => $valeur) {
-            if($valeur !== null && $champ != 'db' && $champ != 'table') {
-                $champ[] = $champ;
-                $inter[] = "?";
-                $valeur[] = $valeur;
-            }
-        }
+    //     foreach($this as $champ => $valeur) {
+    //         if($valeur !== null && $champ != 'db' && $champ != 'table') {
+    //             $champ[] = $champ;
+    //             $inter[] = "?";
+    //             $valeur[] = $valeur;
+    //         }
+    //     }
 
-        $listChamps = implode(', ', $champs);
-        $listeInter = implode(', ', $inter);
+    //     $listChamps = implode(', ', $champs);
+    //     $listeInter = implode(', ', $inter);
 
-        return $this->executeQuery('INSERT INTO ' . $this->table . ' (' . $listChamps . ')VALUES(' . $listeInter . ')', $valeurs);
-    }
+    //     return $this->executeQuery('INSERT INTO ' . $this->table . ' (' . $listChamps . ')VALUES(' . $listeInter . ')', $valeurs);
+    // }
 
 
+    /**
+     * Modifie l'entité courante en base de données
+     *
+     * @return void
+     */
     public function update() {
         $champs = [];
         $valeurs = [];
@@ -97,20 +136,26 @@ class Model extends Database {
         return $this->executeQuery('UPDATE  ' . $this->table . ' SET ' . $listChamps . ' WHERE id = ?', $valeurs);
     }
 
+    /**
+     * Supprime le champs d'id $id de la table courante de la base de données
+     *
+     * @param integer $id Identifiant du champs à supprimer
+     * @return void
+     */
     public function delete(int $id)
     {
         return $this->executeQuery("DELETE FROM {$this->table} WHERE id = ?", [$id]);
     }
 
-    public function hydrate($donnees) {
-        foreach($donnees as $key => $value) {
-            $setter = 'set' . ucfirst($key);
+    // public function hydrate($donnees) {
+    //     foreach($donnees as $key => $value) {
+    //         $setter = 'set' . ucfirst($key);
 
-            if(method_exists($this, $setter)) {
-                $this->$setter($value);
-            }
-        }
-        return $this;
-    }
+    //         if(method_exists($this, $setter)) {
+    //             $this->$setter($value);
+    //         }
+    //     }
+    //     return $this;
+    // }
 
 }

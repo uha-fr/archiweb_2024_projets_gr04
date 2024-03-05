@@ -57,6 +57,11 @@ class AdminController extends Controller {
         ], 'admin.php');
     }
 
+    /**
+     * Vérifie si l'utilisateur courant possède le rôle admin, sinon redirection vers l'accueil
+     *
+     * @return void
+     */
     public function isAdmin() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
