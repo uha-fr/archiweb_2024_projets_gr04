@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Form;
-use App\Models\UtilisateurModel;
+use App\Models\UtilisateursModel;
 
 class UtilisateurController extends Controller
 {
@@ -93,8 +93,8 @@ class UtilisateurController extends Controller
             $password = test_input($_POST['password']);
             $password = hash('sha256', $password);
 
-            $utilisateurModel = new UtilisateurModel();
-            $result = $utilisateurModel->findBy([
+            $utilisateursModel = new UtilisateursModel();
+            $result = $utilisateursModel->findBy([
                 'nom_utilisateur' => $username,
                 'mdp' => $password
             ]);
@@ -218,13 +218,13 @@ class UtilisateurController extends Controller
                 $hashed_password = hash('sha256', $password);
 
                 // Check si doublons dans la base
-                $utilisateurModel = new UtilisateurModel();
-                $result = $utilisateurModel->findBy(['nom_utilisateur' => $username]);
+                $utilisateursModel = new UtilisateursModel();
+                $result = $utilisateursModel->findBy(['nom_utilisateur' => $username]);
                 if (!empty($result))
                     $this->saveErrAndRedirectToSignIn('Nom d\'utilisateur déjà utilisé !');
 
                 // Ajout de l'utilisateur à la base avec le role 'utilisateur' par défaut
-                $success = $utilisateurModel->addUser($username, $hashed_password, $email, 'utilisateur');
+                $success = $utilisateursModel->addUser($username, $hashed_password, $email, 'utilisateur');
 
                 if ($success) {
                     echo 'Utilisateur ajouté avec succès.';

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-class UtilisateurModel extends Model {
+class UtilisateursModel extends Model {
 
     protected $id;
-    protected $nomUtilisateur;
+    protected $nom_utilisateur;
     protected $email;
     protected $mdp;
     protected $role;
@@ -25,16 +25,16 @@ class UtilisateurModel extends Model {
     /**
      * Ajoute un nouvel utilisateur à la base de données.
      *
-     * @param string $nomUtilisateur
+     * @param string $nom_utilisateur
      * @param string $mdp
      * @param string $email
      * @param string $role
      * @return bool Renvoie true si l'ajout a réussi, false sinon.
      */
-    public function addUser(string $nomUtilisateur, string $mdp, string $email, string $role): bool
+    public function addUser(string $nom_utilisateur, string $mdp, string $email, string $role): bool
     {
         $query = 'INSERT INTO ' . $this->table . ' (nom_utilisateur, mdp, email, role) VALUES (?, ?, ?, ?)';
-        $result = $this->executeQuery($query, [$nomUtilisateur, $mdp, $email, $role]);
+        $result = $this->executeQuery($query, [$nom_utilisateur, $mdp, $email, $role]);
 
         return $result !== false;
     }
@@ -64,7 +64,7 @@ class UtilisateurModel extends Model {
      */ 
     public function getNomUtilisateur()
     {
-        return $this->nomUtilisateur;
+        return $this->nom_utilisateur;
     }
 
     /**
@@ -74,7 +74,7 @@ class UtilisateurModel extends Model {
      */ 
     public function setNomUtilisateur($nomUtilisateur)
     {
-        $this->nomUtilisateur = $nomUtilisateur;
+        $this->nom_utilisateur = $nomUtilisateur;
 
         return $this;
     }
