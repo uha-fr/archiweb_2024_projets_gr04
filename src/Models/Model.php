@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Database;
+use PDO;
 
 class Model extends Database {
     protected $table;
@@ -12,7 +13,7 @@ class Model extends Database {
     // SELECT * FROM table
     public function findAll():array {
         $query = $this->executeQuery('SELECT * FROM ' . $this->table);
-        return $query->fetchAll(); 
+        return $query->fetchAll();
     }
 
     // SELECT * FROM table WHERE criteres
@@ -31,7 +32,18 @@ class Model extends Database {
     }
 
     public function find (string $id) {
-        return $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = \'' . $id . '\'')->fetch();
+        $query =  $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = \'' . $id . '\'');
+        $query->setFetchMode(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
+        return $query->fetch();
+    }
+
+    public function countAll() {
+        return $this->executeQuery('SELECT count(*) AS items FROM ' . $this->table)->fetch();
+    }
+
+    public function findByLimitsGeneral(int $premierItem, int $nbItem) {
+        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' LIMIT ' . $premierItem . ', ' . $nbItem);
+        return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
     }
 
     public function executeQuery(string $sql, array $attributs = null){
@@ -66,22 +78,24 @@ class Model extends Database {
         return $this->executeQuery('INSERT INTO ' . $this->table . ' (' . $listChamps . ')VALUES(' . $listeInter . ')', $valeurs);
     }
 
-    // public function update(){
-    //     $champs = [];
-    //     $valeurs = [];
 
-    //     foreach($this as $champ => $valeur) {
-    //         if($valeur !== null && $champ != 'db' && $champ != 'table') {
-    //             $champ[] = "$champ = ?";
-    //             $valeur[] = $valeur;
-    //         }
-    //     }
-    //     $valeurs[] = $this->id;
+    public function update() {
+        $champs = [];
+        $valeurs = [];
 
-    //     $listChamps = implode(', ', $champs);
+        foreach($this as $champ => $valeur) {
+            if($valeur !== null && $champ != 'db' && $champ != 'table') {
+                $champs[] = "$champ = ?";
+                $valeurs[] = $valeur;
+            }
+        }
 
-    //     return $this->executeQuery('UPDATE  ' . $this->table . ' SET ' . $listChamps . ' WHERE id = ?', $valeurs);
-    // }
+        $valeurs[] = $this->id; //ignore
+
+        $listChamps = implode(', ', $champs);
+
+        return $this->executeQuery('UPDATE  ' . $this->table . ' SET ' . $listChamps . ' WHERE id = ?', $valeurs);
+    }
 
     public function delete(int $id)
     {
