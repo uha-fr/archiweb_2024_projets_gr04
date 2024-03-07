@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 09 fév. 2024 à 12:43
+-- Généré le : jeu. 07 mars 2024 à 13:28
 -- Version du serveur : 8.0.31
 -- Version de PHP : 7.3.12
 
@@ -394,16 +394,59 @@ INSERT INTO `aliment` (`id`, `nom`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+  `id` varchar(13) NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `idUserOrigine` int DEFAULT NULL,
+  `idUserDest` int DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_idUserOrigine` (`idUserOrigine`),
+  KEY `fk_idUserDest` (`idUserDest`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `notification`
+--
+
+INSERT INTO `notification` (`id`, `type`, `idUserOrigine`, `idUserDest`, `date`) VALUES
+('65e9b25c20972', 'demande-nutritionniste', 1, 3, '2024-03-07 12:26:04'),
+('65e99ff3cb87f', 'demande-nutritionniste', 1, 4, '2024-03-07 11:07:31'),
+('65e9b25cf0d90', 'demande-nutritionniste', 1, 7, '2024-03-07 12:26:04'),
+('65e9b25d82cfb', 'demande-nutritionniste', 1, 10, '2024-03-07 12:26:05'),
+('65e9b25de2f16', 'demande-nutritionniste', 1, 11, '2024-03-07 12:26:05');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `planning`
+--
+
+DROP TABLE IF EXISTS `planning`;
+CREATE TABLE IF NOT EXISTS `planning` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_user` int NOT NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `planning_recette`
 --
 
 DROP TABLE IF EXISTS `planning_recette`;
 CREATE TABLE IF NOT EXISTS `planning_recette` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `id_recette` int NOT NULL,
-  `id_user` int NOT NULL,
-  `date` date NOT NULL,
-  PRIMARY KEY (`id`)
+  `idRecette` varchar(13) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idRecette` (`idRecette`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -437,7 +480,8 @@ INSERT INTO `recette` (`id`, `nom`, `description`, `id_utilisateur`) VALUES
 ('8', 'Soupe à l\'Oignon', 'Un plat réconfortant, la soupe à l\'oignon est faite de oignons caramélisés lentement cuits dans un bouillon de bœuf, souvent gratinée au four avec des tranches de pain et recouverte de fromage fondu.', -1),
 ('10', 'Cassoulet', 'Un riche ragoût de haricots blancs, de saucisses et de viandes variées comme du porc ou du confit de canard. Originaire du sud-ouest de la France, c\'est un plat copieux et réconfortant.', -1),
 ('11', 'Salade Niçoise', 'Une salade composée typique de la Côte d\'Azur, elle mélange thon, œufs durs, légumes frais comme des tomates et des haricots verts, avec des olives noires et des anchois, le tout assaisonné d\'une vinaigrette légère.', -1),
-('12', 'Crème Brûlée', 'Un dessert élégant et simple, composé d\'une riche crème custard à la vanille, refroidie et recouverte d\'une couche de sucre caramélisé croquant. La surface caramélisée est souvent brûlée au chalumeau juste avant de servir.', -1);
+('12', 'Crème Brûlée', 'Un dessert élégant et simple, composé d\'une riche crème custard à la vanille, refroidie et recouverte d\'une couche de sucre caramélisé croquant. La surface caramélisée est souvent brûlée au chalumeau juste avant de servir.', -1),
+('65c62447b64e4', 'test receette', 'ezfefez', 1);
 
 -- --------------------------------------------------------
 
@@ -475,13 +519,31 @@ INSERT INTO `recette_aliment` (`id_recette`, `id_aliment`, `quantite`) VALUES
 ('5', 387, '1'),
 ('6', 522, '1'),
 ('6', 585, '1'),
-('7', 364, '1'),
-('7', 404, '1'),
-('7', 426, '1'),
-('7', 435, '1'),
-('7', 589, '1'),
-('7', 684, '1'),
-('7', 699, '1');
+('65c62447b64e4', 591, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `relation_nutritionniste`
+--
+
+DROP TABLE IF EXISTS `relation_nutritionniste`;
+CREATE TABLE IF NOT EXISTS `relation_nutritionniste` (
+  `id` varchar(13) NOT NULL,
+  `idNutritionniste` int DEFAULT NULL,
+  `idClient` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idNutritionniste` (`idNutritionniste`),
+  KEY `idClient` (`idClient`)
+) ENGINE=MyISAM AUTO_INCREMENT=2147483648 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `relation_nutritionniste`
+--
+
+INSERT INTO `relation_nutritionniste` (`id`, `idNutritionniste`, `idClient`) VALUES
+('6T454', 8, 2),
+('432E2E2', 7, 2);
 
 -- --------------------------------------------------------
 
@@ -497,15 +559,23 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
   `mdp` varchar(255) NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `utilisateurs`
 --
 
 INSERT INTO `utilisateurs` (`id`, `role`, `nom_utilisateur`, `mdp`, `email`) VALUES
-(1, 'utilisateur', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr'),
-(2, 'utilisateur', 'theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'dezkf@ff.Fr');
+(1, 'admin', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr'),
+(4, 'nutritionniste', 'Jean', 'motdepasse1', 'admin1@example.com'),
+(5, 'utilisateur', 'utilisateur1', 'motdepasse2', 'utilisateur1@example.com'),
+(3, 'nutritionniste', 'theo2', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'dded@de.com'),
+(6, 'utilisateur', 'utilisateur2', 'motdepasse3', 'utilisateur2@example.com'),
+(7, 'nutritionniste', 'nutritionniste1', 'motdepasse4', 'nutritionniste1@example.com'),
+(8, 'nutritionniste', 'nutritionniste12', 'motdepasse4', 'nutritionniste21@example.com'),
+(9, 'nutritionniste', 'nutritionniste13', 'motdepasse4', 'nutritionniste331@example.com'),
+(10, 'nutritionniste', 'nutritionniste14', 'motdepasse4', 'nutritionniste41@example.com'),
+(11, 'nutritionniste', 'nutritionniste15', 'motdepasse4', 'nutritionniste441@example.com');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
