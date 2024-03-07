@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (aliments === undefined) {
             $.ajax({
                 type: 'POST',
-                url: '/archiweb_2024_projets_gr04/aliment/recupererAliments',
+                url: '/aliment/recupererAliments',
                 dataType: 'json',
                 success: function (data) {
                     aliments = data['data'];
