@@ -25,6 +25,7 @@
                         <?php if($_SESSION['utilisateur']['role'] == "admin"): ?>
                             <li class="nav-item"><a class="nav-link" href="/admin">Administration</a></li>
                         <?php endif ?>
+                        <li class="nav-item"><a class="nav-link" href="/rechercheNutritionniste">Nutritionnistes</a></li>
                         <li class="nav-item sign-in-up"><a class="nav-link" href="/utilisateur/logout">Deconnexion</a></li>
                     <?php else: ?>
                         <li class="nav-item sign-in-up"><a class="nav-link" href="/utilisateur/login">Connexion</a></li>

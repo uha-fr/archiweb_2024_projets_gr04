@@ -57,8 +57,22 @@ class Model extends Database {
      *
      * @return object
      */
-    public function countAll() {
-        return $this->executeQuery('SELECT count(*) AS items FROM ' . $this->table)->fetch();
+    public function countAll(array $criteres = []) {
+        if(!empty($criteres)) {
+            $champs = [];
+            $valeurs = [];
+
+            foreach($criteres as $champ => $valeur) {
+                $champs[] = "$champ = ?";
+                $valeurs[] = $valeur;
+            }
+
+            $listChamps = implode(' AND ', $champs);
+            $query = $this->executeQuery('SELECT count(*) AS items FROM ' . $this->table . ' WHERE ' . $listChamps, $valeurs);
+        }else{
+            $query = $this->executeQuery('SELECT count(*) AS items FROM ' . $this->table);
+        }
+        return $query->fetch();
     }
 
     /**
@@ -66,12 +80,27 @@ class Model extends Database {
      *
      * @param integer $premierItem Début de l'intervalle
      * @param integer $nbItem Taille de l'intervalle
+     * @param array $criteres Critères dans la clause WHERE
      * @return object
      */
-    public function findByLimitsGeneral(int $premierItem, int $nbItem) {
-        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' LIMIT ' . $premierItem . ', ' . $nbItem);
+    public function findByLimitsGeneral(int $premierItem, int $nbItem, array $criteres = []) {
+        if(!empty($criteres)) {
+            $champs = [];
+            $valeurs = [];
+
+            foreach($criteres as $champ => $valeur) {
+                $champs[] = "$champ = ?";
+                $valeurs[] = $valeur;
+            }
+
+            $listChamps = implode(' AND ', $champs);
+            $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE ' . $listChamps . ' LIMIT ' . $premierItem . ', ' . $nbItem, $valeurs);
+        }else{
+            $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' LIMIT ' . $premierItem . ', ' . $nbItem);
+        }
         return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
     }
+
 
     /**
      * Exécute une requête SQL sur la base de données.
@@ -93,24 +122,28 @@ class Model extends Database {
         }
     }
 
-    // public function create(){
-    //     $champs = [];
-    //     $inter = [];
-    //     $valeurs = [];
+    /**
+     * Ajoute l'entitée courante en base de donnée
+     *
+     * @return void
+     */
+    public function create(){
+        $champs = [];
+        $inter = [];
+        $valeurs = [];
 
-    //     foreach($this as $champ => $valeur) {
-    //         if($valeur !== null && $champ != 'db' && $champ != 'table') {
-    //             $champ[] = $champ;
-    //             $inter[] = "?";
-    //             $valeur[] = $valeur;
-    //         }
-    //     }
+        foreach($this as $champ => $valeur) {
+            if($valeur !== null && $champ != 'db' && $champ != 'table') {
+                $champs[] = $champ;
+                $inter[] = "?";
+                $valeurs[] = $valeur;
+            }
+        }
 
-    //     $listChamps = implode(', ', $champs);
-    //     $listeInter = implode(', ', $inter);
-
-    //     return $this->executeQuery('INSERT INTO ' . $this->table . ' (' . $listChamps . ')VALUES(' . $listeInter . ')', $valeurs);
-    // }
+        $listChamps = implode(', ', $champs);
+        $listeInter = implode(', ', $inter);
+        return $this->executeQuery('INSERT INTO ' . $this->table . ' (' . $listChamps . ')VALUES(' . $listeInter . ')', $valeurs);
+    }
 
 
     /**

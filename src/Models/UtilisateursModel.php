@@ -22,6 +22,31 @@ class UtilisateursModel extends Model {
         return $this->executeQuery('SELECT * FROM ' . $this->table . 'WHERE nom_utilisateur = ? AND mdp = ?', [$name, $password])->fetch();
     }
 
+    public function findByLimitesNutritionnistesDetails($premierItem, $itemsParPage, int $userId) {
+        
+        $query = 'SELECT
+                    utilisateurs.id,
+                    utilisateurs.nom_utilisateur,
+                    COUNT(relation_nutritionniste.idClient) AS nbRelations,
+                    IF(EXISTS (
+                        SELECT 1
+                        FROM notification
+                        WHERE idUserOrigine = ? AND idUserDest = utilisateurs.id
+                    ), true, false) AS notif
+                    FROM
+                        utilisateurs
+                    LEFT JOIN
+                        relation_nutritionniste ON utilisateurs.id = relation_nutritionniste.idNutritionniste
+                    WHERE
+                        utilisateurs.role = \'nutritionniste\'
+                    GROUP BY
+                        utilisateurs.id
+                    LIMIT 
+                        ' . $premierItem . ', ' . $itemsParPage;
+
+        return $this->executeQuery($query, [$userId])->fetchAll();
+    }
+
     /**
      * Ajoute un nouvel utilisateur à la base de données.
      *
