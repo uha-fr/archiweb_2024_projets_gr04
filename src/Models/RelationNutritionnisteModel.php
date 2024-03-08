@@ -9,7 +9,7 @@ class RelationNutritionnisteModel extends Model {
     protected $idClient;
 
     public function __construct() {
-        $this->table = 'relation_nutritionniste';
+        $this->table = 'relationnutritionniste';
     }
 
     /**

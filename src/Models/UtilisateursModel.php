@@ -27,7 +27,7 @@ class UtilisateursModel extends Model {
         $query = 'SELECT
                     utilisateurs.id,
                     utilisateurs.nom_utilisateur,
-                    COUNT(relation_nutritionniste.idClient) AS nbRelations,
+                    COUNT(relationnutritionniste.idClient) AS nbRelations,
                     IF(EXISTS (
                         SELECT 1
                         FROM notification
@@ -36,7 +36,7 @@ class UtilisateursModel extends Model {
                     FROM
                         utilisateurs
                     LEFT JOIN
-                        relation_nutritionniste ON utilisateurs.id = relation_nutritionniste.idNutritionniste
+                        relationnutritionniste ON utilisateurs.id = relationnutritionniste.idNutritionniste
                     WHERE
                         utilisateurs.role = \'nutritionniste\'
                     GROUP BY

@@ -7,6 +7,7 @@ use App\Models\UtilisateursModel;
 class AdminController extends Controller {
 
     public function index() {
+        $this->verifUtilisateurConnecte();
         $this->isAdmin();
 
         // Affichage par défaut
@@ -14,6 +15,7 @@ class AdminController extends Controller {
     }
 
     public function gestionUtilisateurs() {
+        $this->verifUtilisateurConnecte();
         $this->isAdmin();
 
         $repo = new UtilisateursModel();

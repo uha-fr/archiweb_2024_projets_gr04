@@ -10,11 +10,7 @@ use App\Models\RecetteAlimentModel;
 class RecetteController extends Controller {
 
     public function index() {
-        session_start();
-        if (!isset($_SESSION['utilisateur'])) {
-            header('Location: utilisateur/login');
-            exit;
-        }
+        $this->verifUtilisateurConnecte();
 
         if (isset($_POST['effacerFiltre'])) {
             setcookie('r', '', time() - 3600, '/');
@@ -90,11 +86,7 @@ class RecetteController extends Controller {
     }
 
     public function lire(string $id) {
-        session_start();
-        if (!isset($_SESSION['utilisateur'])) {
-            header('Location: utilisateur/login');
-            exit;
-        }
+        $this->verifUtilisateurConnecte();
 
         $id = $this->secure($id);
         $recetteModel = new RecetteModel();
@@ -116,13 +108,7 @@ class RecetteController extends Controller {
     }
 
     public function ajoutermodifier($idRecette = null) {
-        session_start();
-        if (!isset($_SESSION['utilisateur'])) {
-            header('Location: utilisateur/login');
-            exit;
-        }
-
-        
+        $this->verifUtilisateurConnecte();
 
         $recetteModel = new RecetteModel();
         $recetteAlimentModel = new RecetteAlimentModel();
@@ -161,7 +147,7 @@ class RecetteController extends Controller {
                 $recetteModel->setId($idRecette)
                             ->setNom($nomRecette)
                             ->setDescription($descriptionRecette)
-                            ->setIdUtilisateur($_SESSION['utilisateur']['id']);
+                            ->setIdUtilisateur($this->getUserIdCo());
                 $recetteModel->create();
                 
                 foreach($ingredients as $idIngredient) {
@@ -215,6 +201,8 @@ class RecetteController extends Controller {
     }
 
     public function supprimer(string $id) {
+        $this->verifUtilisateurConnecte();
+
         $id = $this->secure($id);
 
         $recetteModel = new RecetteModel();

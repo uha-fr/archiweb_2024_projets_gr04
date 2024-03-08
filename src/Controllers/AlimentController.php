@@ -7,11 +7,7 @@ use App\Models\AlimentModel;
 class AlimentController extends Controller {
 
     public function index() {
-        session_start();
-        if (!isset($_SESSION['utilisateur'])) {
-            header('Location: ../utilisateur/login');
-            exit;
-        }
+        $this->verifUtilisateurConnecte();
 
         $alimentModel = new AlimentModel();
 
@@ -41,11 +37,7 @@ class AlimentController extends Controller {
     }
 
     public function recupererAliments() {
-        session_start();
-        if (!isset($_SESSION['utilisateur'])) {
-            header('Location: ../utilisateur/login');
-            exit;
-        }
+        $this->verifUtilisateurConnecte();
 
         $alimentModel = new AlimentModel();
         $aliments = $alimentModel->findAll();

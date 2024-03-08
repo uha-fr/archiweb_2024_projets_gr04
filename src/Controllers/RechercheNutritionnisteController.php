@@ -29,10 +29,10 @@ class RechercheNutritionnisteController extends Controller
         }
 
         $premierItem = $pageActuelle * $itemsParPage - $itemsParPage;
-        $items = $repo->findByLimitesNutritionnistesDetails($premierItem, $itemsParPage, $_SESSION['utilisateur']['id']);
+        $items = $repo->findByLimitesNutritionnistesDetails($premierItem, $itemsParPage, $this->getUserIdCo());
 
         $repo = new RelationNutritionnisteModel();
-        $relation = $repo->findBy(['idClient' => $_SESSION['utilisateur']['id']]);
+        $relation = $repo->findBy(['idClient' => $this->getUserIdCo()]);
         
 
         return $this->render('rechercheNutritionniste/index.php', [
@@ -52,7 +52,7 @@ class RechercheNutritionnisteController extends Controller
         $data = json_decode($jsonData, true);
 
         if ($data !== null) {
-            $idUser = $_SESSION['utilisateur']['id'];
+            $idUser = $this->getUserIdCo();
             $notif = new NotificationModel();
             $notif->setId(uniqid())
                     ->setType('demande-nutritionniste')

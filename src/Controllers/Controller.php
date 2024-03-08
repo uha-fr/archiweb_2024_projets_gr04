@@ -31,4 +31,11 @@ abstract class Controller {
             exit;
         }
     }
+
+    function getUserIdCo() {
+        if(isset($_SESSION['utilisateur'])) {
+            return $_SESSION['utilisateur']['id'];
+        }
+        return -1;
+    }
 }

@@ -101,12 +101,12 @@ class UtilisateurController extends Controller
 
             if (!empty($result)) {
                 // var_dump($result);
-                if ($result[0]->mdp == $password) {
+                if ($result[0]->getMdp() == $password) {
                     $_SESSION['utilisateur'] = [
-                        'id' => $result[0]->id,
-                        'email' => $result[0]->email,
-                        'role' => $result[0]->role,
-                        'nom_utilisateur' => $result[0]->nom_utilisateur
+                        'id' => $result[0]->getId(),
+                        'email' => $result[0]->getEmail(),
+                        'role' => $result[0]->getRole(),
+                        'nom_utilisateur' => $result[0]->getNomUtilisateur()
                     ];
 
                     //header('Location: /' . HOST . '/accueil');
@@ -124,7 +124,7 @@ class UtilisateurController extends Controller
      */
     public function logout()
     {
-        session_start();
+        $this->verifUtilisateurConnecte();
 
         session_unset();
         session_destroy();
