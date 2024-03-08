@@ -1,5 +1,5 @@
 <head>
-    <link href="public/css/recettes.css" rel="stylesheet">
+    <link href="/public/css/recettes.css" rel="stylesheet">
     <title>Mes recettes</title>
 </head>
 
@@ -8,18 +8,24 @@
         <section class="col-12">
             <h3>Recettes</h3>
             <div class="d-flex justify-content-between">
-                <a href="recette/ajouter" class="btn btn-primary text-decoration-none">Ajouter une recette</a>
+                <a href="recette/ajoutermodifier" class="btn btn-primary text-decoration-none">Ajouter une recette</a>
                 <?= $btnEffacerFiltres ?>
             </div>
             <table class="table">
                 <thead>
                     <th>Nom</th>
                     <th></th>
+                    <th></th>
                 </thead>
                 <tbody>
                     <?php foreach ($recettes as $recette) : ?>
                         <tr class="ligne-recette" onclick="window.location='recette/lire/<?= $recette->id ?>'">
                             <td><?= $recette->nom ?></td>
+                            <td>
+                                <?php if($recette->id_utilisateur == $_SESSION['utilisateur']['id']): ?> 
+                                    <a href="recette/ajoutermodifier/<?= $recette->id ?>" class="text-decoration-none ps-3 pe-3 pb-1 position-relative start-50 hover">Modifier</a>
+                                <?php endif ?>
+                            </td>
                             <td>
                                 <?php if($recette->id_utilisateur == $_SESSION['utilisateur']['id']): ?> 
                                     <a href="recette/supprimer/<?= $recette->id ?>" class="text-decoration-none ps-3 pe-3 pb-1 position-relative start-50 hover">x</a>

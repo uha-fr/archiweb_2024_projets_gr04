@@ -1,9 +1,9 @@
 <main class="p-4">
     <?= $retour ?>
-    <h2><?= $recette->nom ?></h2>
-    <p><?= $recette->description ?></p>
+    <h2><?= $recette->getNom() ?></h2>
+    <p><?= $recette->getDescription() ?></p>
 
-    <h3>Ingrédients</h3>
+    <h4>Ingrédients</h4>
     <ul>
         <?php foreach ($ingredients as $ingredient) : ?>
             <li><?= $ingredient->nom ?></li>

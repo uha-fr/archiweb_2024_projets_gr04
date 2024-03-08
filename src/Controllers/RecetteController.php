@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\RecetteModel;
 use App\Core\Form;
 use App\Models\AlimentModel;
+use App\Models\RecetteAlimentModel;
 
 class RecetteController extends Controller {
 
@@ -33,7 +34,7 @@ class RecetteController extends Controller {
         if (isset($_POST['aliments']) && is_array($_POST['aliments']) || isset($_COOKIE['r'])) {
             if(isset($_POST['aliments'])) {
                 $alimentsFrigo = $_POST['aliments'];
-                if($this->valide($alimentsFrigo)) {
+                if($this->valideArrayNumeric($alimentsFrigo)) {
                     $recettes = $recetteModel->findByIdsAliments($alimentsFrigo);
                     setcookie('r', json_encode($recettes), time() + 3600, '/');
                 }else{
@@ -114,13 +115,30 @@ class RecetteController extends Controller {
         ]);
     }
 
-    public function ajouter() {
+    public function ajoutermodifier($idRecette = null) {
         session_start();
         if (!isset($_SESSION['utilisateur'])) {
             header('Location: utilisateur/login');
             exit;
         }
 
+        
+
+        $recetteModel = new RecetteModel();
+        $recetteAlimentModel = new RecetteAlimentModel();
+
+        $isModification = false;
+        if($idRecette != null) {
+            $idRecette = $this->secure($idRecette);
+            $isModification = true;
+            $recetteEdit = $recetteModel->findByUser($idRecette);
+            $alimModel = new AlimentModel();
+            $ingredientsEdit = $alimModel->findAlimentsByRecetteId($idRecette);
+            $this->setIngredientFrigo($ingredientsEdit);
+        }
+
+        
+        
         $erreurs = [];
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['nom']) && !empty($_POST['nom'])) {
@@ -130,14 +148,30 @@ class RecetteController extends Controller {
 
                     $ingredients = $_POST['aliments'];
 
-                    if(! $this->valide($ingredients)) {
+                    if(! $this->valideArrayNumeric($ingredients)) {
                         header('Location: ../');
                         exit;
                     }
                 }
-                $recetteModel = new RecetteModel();
-                $recetteModel->newRecette($nomRecette, $descriptionRecette, $ingredients);
-                header('Location: ../recette');
+                if($idRecette != null) {
+                    $recetteModel->supprimerRecetteById($idRecette);
+                }
+                
+                $idRecette = uniqid();
+                $recetteModel->setId($idRecette)
+                            ->setNom($nomRecette)
+                            ->setDescription($descriptionRecette)
+                            ->setIdUtilisateur($_SESSION['utilisateur']['id']);
+                $recetteModel->create();
+                
+                foreach($ingredients as $idIngredient) {
+                    $recetteAlimentModel = new RecetteAlimentModel();
+                    $recetteAlimentModel->setIdRecette($idRecette)
+                                        ->setIdAliment($idIngredient)
+                                        ->setQuantite(1);
+                    $recetteAlimentModel->create();
+                }
+                header('Location: /recette');
                 exit;
             }else{
                 $erreurs['nomVide'] = "Veuillez mettre un nom à votre recette";
@@ -146,37 +180,41 @@ class RecetteController extends Controller {
 
         $formDebut = new Form;
         $formDebut->debutForm('post', '#', ['id' => 'formFindRecette'])
-            ->ajoutLabelFor('nom', 'Nom', [], true)
-            ->ajoutInput('text', 'nom', ['class' => 'form-control mt-1 mb-2', 'required'], true)
-            ->ajoutLabelFor('desc', 'Description', [], true)
-            ->ajoutTextArea('desc', '', ['class' => 'form-control mt-1 mb-2'], true);
-            
+            ->ajoutLabelFor('nom', 'Nom', [], true);
+            if($idRecette != null) {
+                $formDebut->ajoutInput('text', 'nom', ['class' => 'form-control mt-1 mb-2', 'required', 'value' => $recetteEdit->getNom()], true)
+                ->ajoutLabelFor('desc', 'Description', [], true)
+                ->ajoutTextArea('desc', $recetteEdit->getDescription(), ['class' => 'form-control mt-1 mb-2'], true);
+            }else{
+                $formDebut->ajoutInput('text', 'nom', ['class' => 'form-control mt-1 mb-2', 'required'], true)
+                ->ajoutLabelFor('desc', 'Description', [], true)
+                ->ajoutTextArea('desc', '', ['class' => 'form-control mt-1 mb-2'], true);
+            }
         
         $formFin = new Form;
-        $formFin->ajoutLien('Annuler', ['href' => '../recette', 'class' => 'btn w-25 border'])
-                ->ajoutBouton('Ajouter la recette', ['type' => 'submit', 'class' => 'btn btn-primary w-75'])
-                ->finForm();
+        $formFin->ajoutLien('Annuler', ['href' => '/recette', 'class' => 'btn w-25 border']);
+            if($idRecette != null) {
+                $formFin->ajoutBouton('Modifier la recette', ['type' => 'submit', 'class' => 'btn btn-primary w-75']);
+            }else{
+                $formFin->ajoutBouton('Ajouter la recette', ['type' => 'submit', 'class' => 'btn btn-primary w-75']);
+            }
+                $formFin->finForm();
 
         $formAliments = new Form;
         $formAliments->ajoutLabelFor('aliment', 'Ingrédient', [], true)
             ->ajoutInput('search', 'aliment', ['id' => 'monAliment', 'autocomplete' => 'off', 'class' => 'form-control mt-1 mb-2'], true)
             ->ajoutBouton('+', ['id' => 'boutonAddFrigo', 'class' => 'btn btn-primary', 'style' => 'height: 39px; margin-top: 27px;']);
 
-        $this->render('recette/ajouter.php', [
+        $this->render('recette/ajouterModifier.php', [
             'formDebut' => $formDebut->create(),
             'formFin' => $formFin->create(),
             'formAliments' => $formAliments->create(),
             'erreurs' => $erreurs,
+            'isModification' => $isModification,
         ]);
     }
 
     public function supprimer(string $id) {
-        session_start();
-        if (!isset($_SESSION['utilisateur'])) {
-            header('Location: utilisateur/login');
-            exit;
-        }
-
         $id = $this->secure($id);
 
         $recetteModel = new RecetteModel();
@@ -186,10 +224,14 @@ class RecetteController extends Controller {
         exit;
     }
 
-    private function valide(array $datas):bool {
+    private function valideArrayNumeric(array $datas):bool {
         foreach($datas as $data) {
             if(!is_numeric($data)) return false;
         }
         return true;
+    }
+
+    private function setIngredientFrigo(array $ingredients) {
+        echo '<script>let ingredientsEdit = ' . json_encode($ingredients) . '</script>';
     }
 }

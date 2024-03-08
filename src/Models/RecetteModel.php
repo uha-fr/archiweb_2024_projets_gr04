@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use PDO;
+
 class RecetteModel extends Model {
 
     protected $id;
     protected $nom;
     protected $description;
+    protected $id_utilisateur;
 
     public function __construct() {
         $this->table = 'recette';
@@ -22,7 +25,7 @@ class RecetteModel extends Model {
         $sqlJoins = "";
         foreach ($ids as $index => $id) {
             $alias = "ra" . ($index + 1);  // Utilisation d'un alias unique pour chaque join
-            $sqlJoins .= "JOIN recette_aliment $alias ON r.id = $alias.id_recette AND $alias.id_aliment = ? ";
+            $sqlJoins .= "JOIN recettealiment $alias ON r.id = $alias.id_recette AND $alias.id_aliment = ? ";
         }
         $query =  $this->executeQuery('SELECT r.id, r.nom FROM ' . $this->table . ' r ' . $sqlJoins . ' WHERE id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'], $ids);
         return $query->fetchAll(); 
@@ -45,36 +48,22 @@ class RecetteModel extends Model {
      * @param array $ingredients
      * @return void
      */
-    public function newRecette(string $nom, string $desc = '', array $ingredients) {
-        $idRecette = uniqid();
-        $queryRecette = 'INSERT INTO ' . $this->table . ' (`id`, `nom`, `description`, `id_utilisateur`) VALUES (?, ?, ?, ?)';
-        $this->executeQuery($queryRecette, [$idRecette, $nom, $desc, (int)$_SESSION['utilisateur']['id']]);
 
-        if(!empty($ingredients)) {
-            $queryRecetteAliments = 'INSERT INTO recette_aliment (id_recette, id_aliment) VALUES ';
-            $valeurs = [];
-            foreach($ingredients as $index => $idIngredient) {
-                $valeurs[] = $idRecette;
-                $valeurs[] = $idIngredient;
-                $queryRecetteAliments .= '(?, ?)';
-                if($index < count($ingredients) - 1) {
-                    $queryRecetteAliments .= ', ';
-                }
-            }
-            $this->executeQuery($queryRecetteAliments, $valeurs);
+    public function supprimerRecetteById(string $idRecette) {
+        $queryRecette = 'DELETE FROM ' . $this->table . ' WHERE id = ? AND id_utilisateur = ' . $_SESSION['utilisateur']['id'];
+        $res = $this->executeQuery($queryRecette, [$idRecette]);
+        $res = $res->rowCount();
+        
+        if($res > 0) { //Evite qu'un utilisateur supprimes les ingrédients de recette d'un autre utilisateur
+            $queryAliments = 'DELETE FROM recettealiment WHERE id_recette = ?';
+            $this->executeQuery($queryAliments, [$idRecette]);
         }
     }
 
-    public function supprimerRecetteById(string $id) {
-        $queryAliments = 'DELETE FROM recette_aliment WHERE id_recette = ?';
-        $this->executeQuery($queryAliments, [$id]);
-
-        $queryRecette = 'DELETE FROM ' . $this->table . ' WHERE id = ? AND id_utilisateur = ' . $_SESSION['utilisateur']['id'];
-        $this->executeQuery($queryRecette, [$id]);
-    }
-
-    public function findByUser(string $id) {
-        return $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = \'' . $id . '\' AND (id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'] . ')')->fetch();
+    public function findByUser(string $idRecette) {
+        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id = \'' . $idRecette . '\' AND (id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'] . ')');
+        $query->setFetchMode(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
+        return $query->fetch();
     }
 
     /**
@@ -133,6 +122,26 @@ class RecetteModel extends Model {
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_utilisateur
+     */ 
+    public function getIdUtilisateur()
+    {
+        return $this->id_utilisateur;
+    }
+
+    /**
+     * Set the value of id_utilisateur
+     *
+     * @return  self
+     */ 
+    public function setIdUtilisateur($id_utilisateur)
+    {
+        $this->id_utilisateur = $id_utilisateur;
 
         return $this;
     }
