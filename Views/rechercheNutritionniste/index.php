@@ -46,42 +46,26 @@
 </main>
 
 <script type="text/javascript">
-    
-    let cliqued = false;
-
     function demandeSuivi(node) {
-        
-        if(cliqued == false) { //anti spam clique
-            cliqued = true;
+        let idNutritionniste = $(node).attr('id');
 
-            let idNutritionniste = $(node).attr('id');
+        var myJson = {
+            idNutritionniste: idNutritionniste,
+        };
 
-            var myJson = {
-                idNutritionniste: idNutritionniste,
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: '/rechercheNutritionniste/demandeSuivi',
-                data: JSON.stringify(myJson),
-                contentType: 'application/json',
-                success: function(response) {
-                    if(response == 200) {
-                        $(node).prop('disabled', true);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Erreur lors de la requête AJAX :', error);
+        $.ajax({
+            type: 'POST',
+            url: '/rechercheNutritionniste/demandeSuivi',
+            data: JSON.stringify(myJson),
+            contentType: 'application/json',
+            success: function(response) {
+                if(response == 200) {
+                    $(node).prop('disabled', true);
                 }
-            });
-
-            setTimeout(() => {
-                cliqued = false;
-            }, 300);
-        }else{
-            console.log("Anti spam");
-        }
-
-
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la requête :', error);
+            }
+        });
     }
 </script>

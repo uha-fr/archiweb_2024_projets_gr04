@@ -49,9 +49,4 @@
     </section>
 </main>
 
-<script type="text/javascript">
-    function submitForm(selectElement) {
-        var form = selectElement.closest('.role-form');
-        form.submit();
-    }
-</script>
+<script type="text/javascript" src="/public/js/lib.js"></script>
