@@ -4,14 +4,16 @@ namespace App\Controllers;
 
 use App\Core\Form;
 use App\Models\UtilisateursModel;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 
 class UtilisateurController extends Controller
 {
 
     public function index()
     {
-        $controller = new UtilisateurController;
-        $controller->login();
+        header('Location: ../utilisateur/login');
     }
 
     /**
@@ -19,8 +21,6 @@ class UtilisateurController extends Controller
      */
     public function login()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
-
         if (isset($_SESSION['utilisateur'])) {
             // Utilisateur déjà connecté, redirection vers la page d'accueil
             header('Location: ../accueil');
@@ -58,6 +58,10 @@ class UtilisateurController extends Controller
                 'href' => 'signIn',
                 'class' => 'btn btn-link'
             ])
+            ->ajoutLien('Mot de passe oublié ?', [
+                'href' => 'forgotPasswordForm',
+                'class' => 'btn btn-link'
+            ])
             ->finForm();
 
 
@@ -66,7 +70,7 @@ class UtilisateurController extends Controller
         // Affichage formulaire
         $this->render('utilisateur/login.php', [
             'form' => $form->create()
-        ], 'empty.php');
+        ]);
     }
 
     /**
@@ -74,8 +78,6 @@ class UtilisateurController extends Controller
      */
     public function checkLogin()
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
-
         // Si les champs sont vides, rediriger l'utilisateur sur l'écran de login avec un message d'erreur
         if (empty($_POST['username']) || empty($_POST['password'])) {
             $_SESSION['login_error'] = 'Veuillez remplir les champs !';
@@ -124,8 +126,6 @@ class UtilisateurController extends Controller
      */
     public function logout()
     {
-        session_start();
-
         session_unset();
         session_destroy();
         header('Location: ../accueil');
@@ -137,8 +137,6 @@ class UtilisateurController extends Controller
      */
     public function signIn()
     {
-        session_start();
-
         $errorMessage = $_SESSION['sign_in_error'] ?? '';
         unset($_SESSION['sign_in_error']);
 
@@ -184,7 +182,7 @@ class UtilisateurController extends Controller
         // Affichage formulaire
         $this->render('utilisateur/signIn.php', [
             'form' => $form->create()
-        ], 'empty.php');
+        ]);
     }
 
     /**
@@ -192,8 +190,6 @@ class UtilisateurController extends Controller
      */
     public function addUser()
     {
-        session_start();
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!empty($_POST['username']) &&
                 !empty($_POST['password']) &&
@@ -241,6 +237,99 @@ class UtilisateurController extends Controller
             header("Location: ../inscription.php");
             exit;
         }
+    }
+
+    /**
+     * Formulaire de récupération de mot de passe
+     */
+    public function forgotPasswordForm()
+    {
+        $errorMessage = $_SESSION['login_error'] ?? '';
+        unset($_SESSION['login_error']);
+
+        // Génération du formulaire
+        $form = new Form;
+        $form->debutForm('post',  'forgotPassword', ['class' => 'border shadow p-3 rounded', 'style' => 'width: 450px'])
+            ->ajoutTitre('Récupération du mot de passe', ['class' => 'text-center p3'])
+            ->ajoutErr($errorMessage)
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
+                $form->ajoutLabelFor('username', 'Nom d\'utilisateur', ['class' => 'form-label'])
+                    ->ajoutInput('text', 'username', ['class' => 'form-control', 'id' => 'username', 'required']);
+            })
+            ->ajoutBouton('Confirmer', [
+                'type' => 'submit',
+                'class' => 'btn btn-primary'
+            ])
+            ->finForm();
+
+        // Affichage formulaire
+        $this->render('utilisateur/forgotPassword.php', [
+            'form' => $form->create()
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     * @throws RandomException
+     */
+    public function forgotPassword()
+    {
+        if (empty($_POST['username'])) {
+            $_SESSION['login_error'] = 'Veuillez remplir le champ nom d\'utilisateur !';
+            header('Location: ../utilisateur/forgotPasswordForm');
+            exit;
+        }
+
+        $username = $_POST['username'];
+        $utilisateursModel = new UtilisateursModel();
+        $result = $utilisateursModel->findBy(['nom_utilisateur' => $username]);
+
+        if (empty($result)) {
+            $_SESSION['login_error'] = 'Aucun compte n\'est lié au nom d\'utilisateur '. $username .' !';
+            header('Location: ../utilisateur/forgotPasswordForm');
+            exit;
+        }
+
+        // Générer un token unique
+        $token = bin2hex(random_bytes(50));
+
+        // Envoyer l'e-mail
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = '465';
+        $mail->isHTML();
+        $mail->Username = $_ENV['MAIL'];
+        $mail->Password = $_ENV['MAILPASS'];
+        $mail->SetFrom($_ENV['MAIL']);
+        $mail->Subject = 'Réinitialisation du mot de passe';
+        $mail->Body = 'Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : <a href="http://yourwebsite.com/resetPassword?token=' . $token . '">Réinitialiser le mot de passe</a>';
+        $mail->AddAddress($result[0]->email);
+        // die($result[0]->email);
+
+        if(!$mail->Send()) {
+            echo 'Erreur lors de l\'envoi de l\'e-mail.';
+            echo 'Erreur : ' . $mail->ErrorInfo;
+            exit;
+        }
+
+        // Envoyer un email à l'utilisateur avec un lien pour réinitialiser son mot de passe
+        // Le lien doit diriger vers la méthode resetPassword de ce contrôleur
+        // Vous devez inclure un token unique dans le lien pour vérifier la demande de réinitialisation du mot de passe
+
+        $_SESSION['sign_in_success'] = 'Un email de récupération a été envoyé à votre adresse mail.';
+        header('Location: ../utilisateur/login');
+        exit;
+    }
+
+    public function resetPassword()
+    {
+        // Vérifiez le token dans le lien
+        // Si le token est valide, affichez le formulaire de réinitialisation du mot de passe
+        // Sinon, redirigez l'utilisateur vers la page de connexion avec un message d'erreur
     }
 
     /**

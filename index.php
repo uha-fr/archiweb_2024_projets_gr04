@@ -15,6 +15,9 @@ if($_SERVER['HTTP_HOST'] == 'localhost') {
 //.env
 Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '.')->load();
 
+// Démarrage la session
+session_start();
+
 //Création du Routeur (Main.php)
 $app = new Main();
 

@@ -9,7 +9,6 @@ use App\Models\AlimentModel;
 class RecetteController extends Controller {
 
     public function index() {
-        session_start();
         if (!isset($_SESSION['utilisateur'])) {
             header('Location: utilisateur/login');
             exit;
@@ -89,7 +88,6 @@ class RecetteController extends Controller {
     }
 
     public function lire(string $id) {
-        session_start();
         if (!isset($_SESSION['utilisateur'])) {
             header('Location: utilisateur/login');
             exit;
@@ -115,7 +113,6 @@ class RecetteController extends Controller {
     }
 
     public function ajouter() {
-        session_start();
         if (!isset($_SESSION['utilisateur'])) {
             header('Location: utilisateur/login');
             exit;
@@ -171,7 +168,6 @@ class RecetteController extends Controller {
     }
 
     public function supprimer(string $id) {
-        session_start();
         if (!isset($_SESSION['utilisateur'])) {
             header('Location: utilisateur/login');
             exit;
