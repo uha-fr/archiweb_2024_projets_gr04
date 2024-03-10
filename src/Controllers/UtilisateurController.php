@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Core\Form;
 use App\Models\UtilisateursModel;
+use DateInterval;
+use DateTime;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -269,8 +271,7 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * @throws Exception
-     * @throws RandomException
+     * Après soumission du formulaire de récupération de mot de passe
      */
     public function forgotPassword()
     {
@@ -292,6 +293,11 @@ class UtilisateurController extends Controller
 
         // Générer un token unique
         $token = bin2hex(random_bytes(50));
+        $utilisateursModel->saveToken($result[0]->id, $token);
+
+        // Construire le lien à envoyer par mail en fonction de l'environnement
+        $env = getenv('ENV');
+        $link = ($env === 'dev') ? 'http://' . $_SERVER['HTTP_HOST'] . '/utilisateur/resetPassword?token=' . $token : 'http://yourwebsite.com/resetPassword?token=' . $token; // TODO : Remplacer par le nom de domaine du site
 
         // Envoyer l'e-mail
         $mail = new PHPMailer();
@@ -306,7 +312,7 @@ class UtilisateurController extends Controller
         $mail->Password = $_ENV['MAILPASS'];
         $mail->SetFrom($_ENV['MAIL']);
         $mail->Subject = 'Réinitialisation du mot de passe';
-        $mail->Body = 'Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : <a href="http://yourwebsite.com/resetPassword?token=' . $token . '">Réinitialiser le mot de passe</a>';
+        $mail->Body = 'Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : <a href="' . $link . '">Réinitialiser le mot de passe</a>';
         $mail->AddAddress($result[0]->email);
         // die($result[0]->email);
 
@@ -316,20 +322,84 @@ class UtilisateurController extends Controller
             exit;
         }
 
-        // Envoyer un email à l'utilisateur avec un lien pour réinitialiser son mot de passe
-        // Le lien doit diriger vers la méthode resetPassword de ce contrôleur
-        // Vous devez inclure un token unique dans le lien pour vérifier la demande de réinitialisation du mot de passe
-
         $_SESSION['sign_in_success'] = 'Un email de récupération a été envoyé à votre adresse mail.';
         header('Location: ../utilisateur/login');
         exit;
     }
 
+    /**
+     * Formulaire de réinitialisation du mot de passe
+     */
     public function resetPassword()
     {
-        // Vérifiez le token dans le lien
-        // Si le token est valide, affichez le formulaire de réinitialisation du mot de passe
-        // Sinon, redirigez l'utilisateur vers la page de connexion avec un message d'erreur
+        // Récupérer le token à partir de l'URL
+        $token = $_GET['token'] ?? null;
+
+        if (!$token) {
+            $_SESSION['login_error'] = 'Token invalide !';
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
+        // Vérifier si le token existe dans la base de données
+        $utilisateursModel = new UtilisateursModel();
+        $user = $utilisateursModel->findBy(['token' => $token]);
+
+        if (!$user) {
+            $_SESSION['login_error'] = 'Token invalide !';
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
+        $resetPasswordError = $_SESSION['reset_password_error'] ?? '';
+        unset($_SESSION['reset_password_error']);
+
+        // Génération du formulaire
+        $form = new Form;
+        $form->debutForm('post',  '', ['class' => 'border shadow p-3 rounded', 'style' => 'width: 450px'])
+            ->ajoutTitre('Réinitialisation du mot de passe', ['class' => 'text-center p3'])
+            ->ajoutErr($resetPasswordError)
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
+                $form->ajoutLabelFor('password', 'Nouveau mot de passe', ['class' => 'form-label'])
+                    ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'password', 'required']);
+            })
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
+                $form->ajoutLabelFor('confirm_password', 'Confirmer le nouveau mot de passe', ['class' => 'form-label'])
+                    ->ajoutInput('password', 'confirm_password', ['class' => 'form-control', 'id' => 'confirm_password', 'required']);
+            })
+            ->ajoutBouton('Réinitialiser le mot de passe', [
+                'type' => 'submit',
+                'class' => 'btn btn-primary'
+            ])
+            ->finForm();
+
+
+        // Si le formulaire de réinitialisation du mot de passe est soumis
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $password = $_POST['password'];
+            $confirm_password = $_POST['confirm_password'];
+
+            if ($password !== $confirm_password) {
+                $_SESSION['reset_password_error'] = 'Les mots de passe doivent correspondre !';
+                header('Location: ../utilisateur/resetPassword?token=' . $token);
+                exit;
+            }
+
+            $hashed_password = hash('sha256', $password);
+            $utilisateursModel->updatePassword($user[0]->id, $hashed_password);
+
+            // Supprimer le token lié à la demande de réinitialisation du mot de passe
+            $utilisateursModel->deleteToken($user[0]->id);
+
+            $_SESSION['sign_in_success'] = 'Votre mot de passe a été réinitialisé avec succès. Veuillez vous connecter avec votre nouveau mot de passe.';
+            header('Location: ../utilisateur/login');
+            exit;
+        }
+
+        // Afficher le formulaire de réinitialisation du mot de passe
+        $this->render('utilisateur/resetPassword.php', [
+            'form' => $form->create()
+        ]);
     }
 
     /**
