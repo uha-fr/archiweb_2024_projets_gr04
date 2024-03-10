@@ -558,6 +558,7 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
   `nom_utilisateur` varchar(255) NOT NULL,
   `mdp` varchar(255) NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `token` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -565,17 +566,17 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
 -- Déchargement des données de la table `utilisateurs`
 --
 
-INSERT INTO `utilisateurs` (`id`, `role`, `nom_utilisateur`, `mdp`, `email`) VALUES
-(1, 'admin', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr'),
-(4, 'nutritionniste', 'Jean', 'motdepasse1', 'admin1@example.com'),
-(5, 'utilisateur', 'utilisateur1', 'motdepasse2', 'utilisateur1@example.com'),
-(3, 'nutritionniste', 'theo2', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'dded@de.com'),
-(6, 'utilisateur', 'utilisateur2', 'motdepasse3', 'utilisateur2@example.com'),
-(7, 'nutritionniste', 'nutritionniste1', 'motdepasse4', 'nutritionniste1@example.com'),
-(8, 'nutritionniste', 'nutritionniste12', 'motdepasse4', 'nutritionniste21@example.com'),
-(9, 'nutritionniste', 'nutritionniste13', 'motdepasse4', 'nutritionniste331@example.com'),
-(10, 'nutritionniste', 'nutritionniste14', 'motdepasse4', 'nutritionniste41@example.com'),
-(11, 'nutritionniste', 'nutritionniste15', 'motdepasse4', 'nutritionniste441@example.com');
+INSERT INTO `utilisateurs` (`id`, `role`, `nom_utilisateur`, `mdp`, `email`, `token`) VALUES
+(1, 'admin', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr', NULL),
+(4, 'nutritionniste', 'Jean', 'motdepasse1', 'admin1@example.com', NULL),
+(5, 'utilisateur', 'utilisateur1', 'motdepasse2', 'utilisateur1@example.com', NULL),
+(3, 'nutritionniste', 'theo2', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'dded@de.com', NULL),
+(6, 'utilisateur', 'utilisateur2', 'motdepasse3', 'utilisateur2@example.com', NULL),
+(7, 'nutritionniste', 'nutritionniste1', 'motdepasse4', 'nutritionniste1@example.com', NULL),
+(8, 'nutritionniste', 'nutritionniste12', 'motdepasse4', 'nutritionniste21@example.com', NULL),
+(9, 'nutritionniste', 'nutritionniste13', 'motdepasse4', 'nutritionniste331@example.com', NULL),
+(10, 'nutritionniste', 'nutritionniste14', 'motdepasse4', 'nutritionniste41@example.com', NULL),
+(11, 'nutritionniste', 'nutritionniste15', 'motdepasse4', 'nutritionniste441@example.com', NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
