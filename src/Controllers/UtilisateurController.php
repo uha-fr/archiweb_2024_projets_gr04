@@ -93,7 +93,7 @@ class UtilisateurController extends Controller
                 return htmlspecialchars($data);
             }
 
-            $username = test_input($_POST['username']);
+            $username = strtolower(test_input($_POST['username']));
             $password = test_input($_POST['password']);
             $password = hash('sha256', $password);
 
@@ -203,7 +203,7 @@ class UtilisateurController extends Controller
                     $this->saveErrAndRedirectToSignIn('Adresse email invalide !');
 
                 // Récupérer les données du formulaire
-                $username = $_POST['username'];
+                $username = strtolower($_POST['username']);
                 $password = $_POST['password'];
                 $confirm_password = $_POST['confirm_password'];
                 $email = $_POST['email'];
@@ -298,11 +298,13 @@ class UtilisateurController extends Controller
         // Construire le lien à envoyer par mail en fonction de l'environnement
         $env = getenv('ENV');
         $link = ($env === 'dev') ? 'http://' . $_SERVER['HTTP_HOST'] . '/utilisateur/resetPassword?token=' . $token : 'http://yourwebsite.com/resetPassword?token=' . $token; // TODO : Remplacer par le nom de domaine du site
+        $imageLink = ($env === 'dev') ? 'http://' . $_SERVER['HTTP_HOST'] . '/public/images/logo.png' : 'http://yourwebsite.com/public/images/logo.png';
 
         // Envoyer l'e-mail
         $mail = new PHPMailer();
         $mail->isSMTP();
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        $mail->CharSet = 'UTF-8';
+        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'ssl';
         $mail->Host = 'smtp.gmail.com';
@@ -312,7 +314,44 @@ class UtilisateurController extends Controller
         $mail->Password = $_ENV['MAILPASS'];
         $mail->SetFrom($_ENV['MAIL']);
         $mail->Subject = 'Réinitialisation du mot de passe';
-        $mail->Body = 'Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : <a href="' . $link . '">Réinitialiser le mot de passe</a>';
+        $mail->Body = '
+            <html>
+            <head>
+                <style>
+                    body {
+                        background-color: #f0f0f0;
+                        font-family: Arial, sans-serif;
+                    }
+                    .container {
+                        background-color: #ffffff;
+                        margin: 0 auto;
+                        padding: 20px;
+                        max-width: 600px;
+                    }
+                    .button {
+                        background-color: #f19f1e;
+                        border: none;
+                        color: white;
+                        padding: 15px 32px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin: 4px 2px;
+                        cursor: pointer;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <img src="' . $imageLink . '" alt="Logo du site">
+                    <h2>Bonjour ' . $username . ' !</h2>
+                    <p>Vous avez récemment demandé une réinitialisation de votre mot de passe. Pour réinitialiser votre mot de passe, veuillez cliquer sur le bouton suivant :</p>
+                    <a href="' . $link . '" class="button">Réinitialiser le mot de passe</a>
+                </div>
+            </body>
+            </html>
+        ';
         $mail->AddAddress($result[0]->email);
         // die($result[0]->email);
 

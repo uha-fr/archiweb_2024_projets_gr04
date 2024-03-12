@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Une application pour manger, planifier, préparer des recettes</title>
+        <title>Manger - Accueil</title>
         <!-- <link rel="icon" type="image/x-icon" href="public/images/img/favicon.ico" /> -->
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -22,8 +22,9 @@
         <header class="masthead text-center text-white">
             <div class="masthead-content">
                 <div class="container px-5">
+                    <img src="/public/images/logo.png" alt="Logo complet de MANGER" style="scale: 0.80">
                     <h1 class="masthead-heading mb-0">Une Application pour</h1>
-                    <h2 class="masthead-subheading mb-0">Manger, plannifier...</h2>
+                    <h2 class="masthead-subheading mb-0">Manger, planifier, préparer des recettes...</h2>
                     <a class="btn btn-primary btn-xl rounded-pill mt-5" href="#scroll">Démarrer</a>
                 </div>
             </div>
