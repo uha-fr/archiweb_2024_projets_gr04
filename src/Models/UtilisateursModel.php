@@ -65,6 +65,21 @@ class UtilisateursModel extends Model {
     }
 
     /**
+     * Met à jour le mail d'un utilisateur.
+     *
+     * @param $id
+     * @param $new_mail
+     * @return bool
+     */
+    public function updateEmail($id, $new_mail): bool
+    {
+        $query = 'UPDATE ' . $this->table . ' SET email = ? WHERE id = ?';
+        $result = $this->executeQuery($query, [$new_mail, $id]);
+
+        return $result !== false;
+    }
+
+    /**
      * Met à jour le mot de passe d'un utilisateur.
      *
      * @param int $id

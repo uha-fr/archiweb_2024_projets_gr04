@@ -441,6 +441,112 @@ class UtilisateurController extends Controller
         ]);
     }
 
+    public function settings() {
+        // Récupération des messages d'erreur et de succès
+        $errorMessage = $_SESSION['settings_error'] ?? '';
+        $successMessage = $_SESSION['settings_success'] ?? '';
+        $errorPswMessage = $_SESSION['settings_psw_error'] ?? '';
+        $successPswMessage = $_SESSION['settings_psw_success'] ?? '';
+
+        unset($_SESSION['settings_error']);
+        unset($_SESSION['settings_success']);
+        unset($_SESSION['settings_psw_error']);
+        unset($_SESSION['settings_psw_success']);
+
+        // Génération du formulaire de modification de l'adresse e-mail
+        $emailForm = new Form;
+        $emailForm->debutForm('post', '../utilisateur/changeEmail', ['class' => 'border shadow p-3 rounded', 'style' => 'width: 450px'])
+            ->ajoutTitre('Changer d\'adresse e-mail', ['class' => 'text-center p3'])
+            ->ajoutErr($errorMessage)
+            ->ajoutSuccess($successMessage)
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
+                $form->ajoutLabelFor('email', 'Nouvelle adresse e-mail', ['class' => 'form-label'])
+                    ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email', 'required']);
+            })
+            ->ajoutBouton('Changer d\'adresse e-mail', ['type' => 'submit', 'class' => 'btn btn-primary'])
+            ->finForm();
+
+        // Génération du formulaire de modification du mot de passe
+        $passwordForm = new Form;
+        $passwordForm->debutForm('post', '../utilisateur/changePassword', ['class' => 'border shadow p-3 rounded', 'style' => 'width: 450px'])
+            ->ajoutTitre('Changer de mot de passe', ['class' => 'text-center p3'])
+            ->ajoutErr($errorPswMessage)
+            ->ajoutSuccess($successPswMessage)
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
+                $form->ajoutLabelFor('password', 'Nouveau mot de passe', ['class' => 'form-label'])
+                    ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'password', 'required']);
+            })
+            ->ajoutDiv(['class' => 'mb-3'], function ($form) {
+                $form->ajoutLabelFor('confirm_password', 'Confirmer le nouveau mot de passe', ['class' => 'form-label'])
+                    ->ajoutInput('password', 'confirm_password', ['class' => 'form-control', 'id' => 'confirm_password', 'required']);
+            })
+            ->ajoutBouton('Changer de mot de passe', ['type' => 'submit', 'class' => 'btn btn-primary'])
+            ->finForm();
+
+        // Affichez la page des paramètres de l'utilisateur
+        $this->render('utilisateur/settings.php', [
+            'emailForm' => $emailForm->create(),
+            'passwordForm' => $passwordForm->create()
+        ]);
+    }
+
+    public function changeEmail() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $newEmail = $_POST['email'];
+
+            // Validation de l'e-mail
+            if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+                header('Location: ../utilisateur/settings');
+                $_SESSION['settings_error'] = 'Adresse mail invalide !';
+                exit();
+            }
+
+            $user_id = $_SESSION['utilisateur']['id'];
+
+            $userModel = new UtilisateursModel();
+            $result = $userModel->updateEmail($user_id, $newEmail);
+
+            if ($result) {
+                $_SESSION['utilisateur']['email'] = $newEmail;
+                $_SESSION['settings_success'] = 'Adresse e-mail mise à jour avec succès !';
+            } else {
+                $_SESSION['settings_error'] = 'Erreur lors de la mise à jour de l\'adresse e-mail !';
+            }
+        }
+
+        header('Location: ../utilisateur/settings');
+        exit();
+    }
+
+    public function changePassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $newPassword = $_POST['password'];
+            $confirmPassword = $_POST['confirm_password'];
+
+            if ($newPassword !== $confirmPassword) {
+                $_SESSION['settings_psw_error'] = 'Les mots de passe doivent correspondre !';
+                header('Location: ../utilisateur/settings');
+                exit();
+            }
+
+            $user_id = $_SESSION['utilisateur']['id'];
+            $hashedPassword = hash('sha256', $newPassword);
+
+            $userModel = new UtilisateursModel();
+            $result = $userModel->updatePassword($user_id, $hashedPassword);
+
+            if ($result) {
+                $_SESSION['settings_psw_success'] = 'Mot de passe mis à jour avec succès !';
+            } else {
+                $_SESSION['settings_psw_error'] = 'Erreur lors de la mise à jour du mot de passe !';
+            }
+        }
+
+        header('Location: ../utilisateur/settings');
+        exit();
+    }
+
     /**
      * Explicite
      * @return void → Redirection vers la page de Login
