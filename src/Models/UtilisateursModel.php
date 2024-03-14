@@ -65,6 +65,65 @@ class UtilisateursModel extends Model {
     }
 
     /**
+     * Met à jour le mail d'un utilisateur.
+     *
+     * @param $id
+     * @param $new_mail
+     * @return bool
+     */
+    public function updateEmail($id, $new_mail): bool
+    {
+        $query = 'UPDATE ' . $this->table . ' SET email = ? WHERE id = ?';
+        $result = $this->executeQuery($query, [$new_mail, $id]);
+
+        return $result !== false;
+    }
+
+    /**
+     * Met à jour le mot de passe d'un utilisateur.
+     *
+     * @param int $id
+     * @param string $mdp Le mdp haché
+     * @return bool Renvoie true si la mise à jour a réussi, false sinon.
+     */
+    public function updatePassword(int $id, string $mdp): bool
+    {
+        $query = 'UPDATE ' . $this->table . ' SET mdp = ? WHERE id = ?';
+        $result = $this->executeQuery($query, [$mdp, $id]);
+
+        return $result != false;
+    }
+
+    /**
+     * Met à jour le token de réinitialisation du mdp pour un utilisateur.
+     *
+     * @param int $id
+     * @param string $token
+     * @return bool Renvoie true si la mise à jour a réussi, false sinon.
+     */
+    public function saveToken(int $id, string $token): bool
+    {
+        $query = 'UPDATE ' . $this->table . ' SET token = ? WHERE id = ?';
+        $result = $this->executeQuery($query, [$token, $id]);
+
+        return $result != false;
+    }
+
+    /**
+     * Supprime le token pour un utilisateur.
+     *
+     * @param int $id
+     * @return bool Renvoie true si la suppression a réussi, false sinon.
+     */
+    public function deleteToken(int $id): bool
+    {
+        $query = 'UPDATE ' . $this->table . ' SET token = NULL WHERE id = ?';
+        $result = $this->executeQuery($query, [$id]);
+
+        return $result != false;
+    }
+
+    /**
      * Get the value of id
      */ 
     public function getId()

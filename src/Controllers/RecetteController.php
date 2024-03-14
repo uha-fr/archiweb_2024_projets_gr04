@@ -123,8 +123,6 @@ class RecetteController extends Controller {
             $this->setIngredientFrigo($ingredientsEdit);
         }
 
-        
-        
         $erreurs = [];
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['nom']) && !empty($_POST['nom'])) {
@@ -142,14 +140,14 @@ class RecetteController extends Controller {
                 if($idRecette != null) {
                     $recetteModel->supprimerRecetteById($idRecette);
                 }
-                
+
                 $idRecette = uniqid();
                 $recetteModel->setId($idRecette)
                             ->setNom($nomRecette)
                             ->setDescription($descriptionRecette)
                             ->setIdUtilisateur($this->getUserIdCo());
                 $recetteModel->create();
-                
+
                 foreach($ingredients as $idIngredient) {
                     $recetteAlimentModel = new RecetteAlimentModel();
                     $recetteAlimentModel->setIdRecette($idRecette)
