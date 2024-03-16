@@ -9,7 +9,7 @@ class PlanningModel extends Model {
     protected $date;
 
     public function __construct() {
-        $this->table = 'planning';
+        $this->table = 'recette';
     }
 
     /**
