@@ -11,9 +11,13 @@ if($_SERVER['HTTP_HOST'] == 'localhost') {
 }else{
     define('HOST', '');
 }
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 //.env
-Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '.')->load();
+// Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '.')->load();
+Dotenv\Dotenv::createUnsafeImmutable(__DIR__)->load();
 
 // Démarrage la session
 session_start();
