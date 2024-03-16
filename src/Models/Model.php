@@ -17,6 +17,7 @@ class Model extends Database {
      */
     public function findAll():array {
         $query = $this->executeQuery('SELECT * FROM ' . $this->table);
+        
         return $query->fetchAll();
     }
 
