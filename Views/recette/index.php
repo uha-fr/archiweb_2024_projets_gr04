@@ -13,6 +13,7 @@
             </div>
             <table class="table">
                 <thead>
+                    <th></th>
                     <th>Nom</th>
                     <th></th>
                     <th></th>
@@ -20,6 +21,7 @@
                 <tbody>
                     <?php foreach ($recettes as $recette) : ?>
                         <tr class="ligne-recette" onclick="window.location='recette/lire/<?= $recette->id ?>'">
+                            <td><img src="/public/images/icons/star.svg" alt="Favori" class="favori-icon" id="favori-icon" onclick="addFavoris(this, '<?= $recette->id ?>', 'recette');"></td>
                             <td><?= $recette->nom ?></td>
                             <td>
                                 <?php if($recette->id_utilisateur == $_SESSION['utilisateur']['id']): ?> 
@@ -70,3 +72,4 @@
 
 
 <script src="public/js/rechercheAliment.js" type="text/javascript"></script>
+<script src="public/js/lib.js" type="text/javascript"></script>

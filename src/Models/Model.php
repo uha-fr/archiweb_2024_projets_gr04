@@ -101,6 +101,10 @@ class Model extends Database {
         return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
     }
 
+    public function findFavorisByLimits() {
+        //$query = 'SELECT '
+    }
+
 
     /**
      * Exécute une requête SQL sur la base de données.
