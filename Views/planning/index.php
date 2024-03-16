@@ -118,14 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: [
-            <?php foreach($events as $event): ?>
-            {
-                title: '<?= htmlspecialchars($event->getTitre(), ENT_QUOTES, 'UTF-8') ?>',
-                start: '<?= htmlspecialchars($event->getDateDebut(), ENT_QUOTES, 'UTF-8') ?>',
-                end: '<?= htmlspecialchars($event->getDateFin(), ENT_QUOTES, 'UTF-8') ?>',
-                url: '/planning/<?= htmlspecialchars($event->getId(), ENT_QUOTES, 'UTF-8') ?>',
-            },
-            <?php endforeach; ?>
+            
         ]
     });
     calendar.render();
@@ -149,8 +142,45 @@ document.addEventListener('DOMContentLoaded', function() {
             end: dateFin
         });
 
+        // Préparation de l'objet JSON pour envoyer au serveur les informations des recettes qu'on vient d'ajouter dans le calendrier 
+        var myJson = {
+            idRecette: recette, //TODO : Ici, recette est le nom de la recette, nous il nous faut son id.
+            start: dateDebut,
+            end: dateFin
+        };
+
+        // Requete AJAX qui envoie notre objet MYSON au serveur
+        // Le serveur reçoit les informations via la fonction addRecette dans PlanningController.php
+        $.ajax({
+            type: 'POST',
+            url: '/planning/addRecette',
+            data: JSON.stringify(myJson),
+            contentType: 'application/json',
+            success: function(response) {
+                if(response == 200) {
+                    console.log("Succes add recette");
+                    console.log(element);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la requête :', error);
+            }
+        });
+
         document.getElementById('eventForm').reset();
     });
+
+
+    /**
+     * TODO : au chargement de la page, il faut ajouter les recettes au calendrier. Il faut donc récupérer toutes les recettes
+     * du planning de l'utilisateur courant depuis le serveur (dans PlanningController.php) et les envoyer à la vue (ici),
+     * puis les afficher avec 
+     * calendar.addEvent({
+            title: recette,
+            start: dateDebut,
+            end: dateFin
+        }); 
+     */
 });
 </script>
 

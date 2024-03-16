@@ -22,7 +22,7 @@
                     <?php if(isset($_SESSION['utilisateur'])): ?>
                         <li class="nav-item"><a class="nav-link" href="/aliment">Aliment</a></li>
                         <li class="nav-item"><a class="nav-link" href="/recette">Recette</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Planing</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/planning">Planning</a></li>
                         <li class="nav-item"><a class="nav-link" href="/rechercheNutritionniste">Nutritionnistes</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
