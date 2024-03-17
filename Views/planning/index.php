@@ -5,7 +5,7 @@
     <style>
         body {
             background-color: #f7f7f7;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         #calendar {
@@ -68,6 +68,7 @@
                 <input type="date" id="dateFin" class="form-control" required>
             </div>
             <div class="col-md-4">
+
             <button type="submit" class="btn btn-primary mt-4">Ajouter la recette</button>
             </div>
         </div>
@@ -111,18 +112,36 @@ function showDescription() {
 
 
 </script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: [
-            
-        ]
+        initialView: 'dayGridMonth'
     });
+
     calendar.render();
 
+    fetchAndDisplayRecettes();
+
+    function fetchAndDisplayRecettes() {
+        $.ajax({
+            url: '/planning/getRecettes',
+            method: 'GET',
+            success: function(data) {
+                const recettes = JSON.parse(data);
+                recettes.forEach(function(recette) {
+                    calendar.addEvent({
+                        title: recette.nom, 
+                        start: recette.dateDebut,
+                        end: recette.dateFin
+                    });
+                });
+            },
+            error: function() {
+                console.error("Erreur lors de la récupération des recettes.");
+            }
+        });
+    }
 
     document.getElementById('eventForm').addEventListener('submit', function(e) {
         e.preventDefault();  
@@ -142,15 +161,12 @@ document.addEventListener('DOMContentLoaded', function() {
             end: dateFin
         });
 
-        // Préparation de l'objet JSON pour envoyer au serveur les informations des recettes qu'on vient d'ajouter dans le calendrier 
         var myJson = {
-            idRecette: recette, //TODO : Ici, recette est le nom de la recette, nous il nous faut son id.
+            idRecette: recetteSelect.value,
             start: dateDebut,
             end: dateFin
         };
 
-        // Requete AJAX qui envoie notre objet MYSON au serveur
-        // Le serveur reçoit les informations via la fonction addRecette dans PlanningController.php
         $.ajax({
             type: 'POST',
             url: '/planning/addRecette',
@@ -158,8 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: 'application/json',
             success: function(response) {
                 if(response == 200) {
-                    console.log("Succes add recette");
-                    console.log(element);
+                    console.log("Succès de l'ajout de la recette.");
                 }
             },
             error: function(xhr, status, error) {
@@ -169,20 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('eventForm').reset();
     });
-
-
-    /**
-     * TODO : au chargement de la page, il faut ajouter les recettes au calendrier. Il faut donc récupérer toutes les recettes
-     * du planning de l'utilisateur courant depuis le serveur (dans PlanningController.php) et les envoyer à la vue (ici),
-     * puis les afficher avec 
-     * calendar.addEvent({
-            title: recette,
-            start: dateDebut,
-            end: dateFin
-        }); 
-     */
 });
 </script>
-
-
 
