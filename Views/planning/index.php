@@ -1,5 +1,6 @@
 <head>
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@latest/main.min.css' rel='stylesheet' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.9.0/locales/fr.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@latest/main.min.js'></script>
     <title>Mon planning</title>
     <style>
@@ -116,8 +117,16 @@ function showDescription() {
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth'
-    });
+        locale: 'fr',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek'
+    },
+});
+
+
 
     calendar.render();
 
@@ -130,10 +139,13 @@ document.addEventListener('DOMContentLoaded', function() {
             dataType: 'json',
             success: function(data) {
                 data.forEach(function(recette) {
+                    let endDate = new Date(recette.dateFin);
+                    endDate.setDate(endDate.getDate() + 1);
+                    
                     calendar.addEvent({
                         title: recette.nom, 
                         start: recette.dateDebut,
-                        end: recette.dateFin
+                        end: endDate.toISOString().split('T')[0]
                     });
                 });
             },
@@ -148,17 +160,20 @@ document.addEventListener('DOMContentLoaded', function() {
         var recetteSelect = document.getElementById('recette');
         var recette = recetteSelect.options[recetteSelect.selectedIndex].text;
         var dateDebut = document.getElementById('dateDebut').value;
-        var dateFin = document.getElementById('dateFin').value;
+         dateFin = document.getElementById('dateFin').value;
 
         if (!recette || !dateDebut || !dateFin) {
             alert("Tous les champs sont requis !");
             return;
         }
 
+        let endDate = new Date(dateFin);
+        endDate.setDate(endDate.getDate() + 1);
+
         calendar.addEvent({
             title: recette,
             start: dateDebut,
-            end: dateFin
+            end: endDate.toISOString().split('T')[0]
         });
 
         var myJson = {
