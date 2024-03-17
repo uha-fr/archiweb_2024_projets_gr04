@@ -15,7 +15,7 @@ class UtilisateurController extends Controller
 
     public function index()
     {
-        header('Location: ../utilisateur/login');
+        header('Location: ' . WEBROOT . '/utilisateur/login');
     }
 
     /**
@@ -25,7 +25,7 @@ class UtilisateurController extends Controller
     {
         if (isset($_SESSION['utilisateur'])) {
             // Utilisateur déjà connecté, redirection vers la page d'accueil
-            header('Location: ../accueil');
+            header('Location: ' . WEBROOT . '/accueil');
             exit;
         }
 
@@ -83,7 +83,7 @@ class UtilisateurController extends Controller
         // Si les champs sont vides, rediriger l'utilisateur sur l'écran de login avec un message d'erreur
         if (empty($_POST['username']) || empty($_POST['password'])) {
             $_SESSION['login_error'] = 'Veuillez remplir les champs !';
-            header('Location: ../utilisateur/login');
+            header('Location: ' . WEBROOT . '/utilisateur/login');
             exit;
         } else { // Autrement traiter les données et autoriser ou non la connexion
             function test_input($data): string
@@ -113,8 +113,7 @@ class UtilisateurController extends Controller
                         'nom_utilisateur' => $result[0]->getNomUtilisateur()
                     ];
 
-                    //header('Location: /' . HOST . '/accueil');
-                    header('Location: ../accueil');
+                    header('Location: ' . WEBROOT . '/accueil');
                     exit;
                 } else
                     $this->saveErrAndRedirect();
@@ -132,7 +131,7 @@ class UtilisateurController extends Controller
 
         session_unset();
         session_destroy();
-        header('Location: ../accueil');
+        header('Location: ' . WEBROOT . '/accueil');
         exit;
     }
 
@@ -279,7 +278,7 @@ class UtilisateurController extends Controller
     {
         if (empty($_POST['username'])) {
             $_SESSION['login_error'] = 'Veuillez remplir le champ nom d\'utilisateur !';
-            header('Location: ../utilisateur/forgotPasswordForm');
+            header('Location: ' . WEBROOT . '/utilisateur/forgotPasswordForm');
             exit;
         }
 
@@ -289,7 +288,7 @@ class UtilisateurController extends Controller
 
         if (empty($result)) {
             $_SESSION['login_error'] = 'Aucun compte n\'est lié au nom d\'utilisateur '. $username .' !';
-            header('Location: ../utilisateur/forgotPasswordForm');
+            header('Location: ' . WEBROOT . '/utilisateur/forgotPasswordForm');
             exit;
         }
 
@@ -364,7 +363,7 @@ class UtilisateurController extends Controller
         }
 
         $_SESSION['sign_in_success'] = 'Un email de récupération a été envoyé à votre adresse mail.';
-        header('Location: ../utilisateur/login');
+        header('Location: ' . WEBROOT . '/utilisateur/login');
         exit;
     }
 
@@ -378,7 +377,7 @@ class UtilisateurController extends Controller
 
         if (!$token) {
             $_SESSION['login_error'] = 'Token invalide !';
-            header('Location: ../utilisateur/login');
+            header('Location: ' . WEBROOT . '/utilisateur/login');
             exit;
         }
 
@@ -388,7 +387,7 @@ class UtilisateurController extends Controller
 
         if (!$user) {
             $_SESSION['login_error'] = 'Token invalide !';
-            header('Location: ../utilisateur/login');
+            header('Location: ' . WEBROOT . '/utilisateur/login');
             exit;
         }
 
@@ -422,7 +421,7 @@ class UtilisateurController extends Controller
 
             if ($password !== $confirm_password) {
                 $_SESSION['reset_password_error'] = 'Les mots de passe doivent correspondre !';
-                header('Location: ../utilisateur/resetPassword?token=' . $token);
+                header('Location: ' . WEBROOT . '/utilisateur/resetPassword?token=' . $token);
                 exit;
             }
 
@@ -433,7 +432,7 @@ class UtilisateurController extends Controller
             $utilisateursModel->deleteToken($user[0]->id);
 
             $_SESSION['sign_in_success'] = 'Votre mot de passe a été réinitialisé avec succès. Veuillez vous connecter avec votre nouveau mot de passe.';
-            header('Location: ../utilisateur/login');
+            header('Location: ' . WEBROOT . '/utilisateur/login');
             exit;
         }
 
@@ -498,7 +497,7 @@ class UtilisateurController extends Controller
 
             // Validation de l'e-mail
             if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
-                header('Location: ../utilisateur/settings');
+                header('Location: ' . WEBROOT . '/utilisateur/settings');
                 $_SESSION['settings_error'] = 'Adresse mail invalide !';
                 exit();
             }
@@ -516,7 +515,7 @@ class UtilisateurController extends Controller
             }
         }
 
-        header('Location: ../utilisateur/settings');
+        header('Location: ' . WEBROOT . '/utilisateur/settings');
         exit();
     }
 
@@ -528,7 +527,7 @@ class UtilisateurController extends Controller
 
             if ($newPassword !== $confirmPassword) {
                 $_SESSION['settings_psw_error'] = 'Les mots de passe doivent correspondre !';
-                header('Location: ../utilisateur/settings');
+                header('Location: ' . WEBROOT . '/utilisateur/settings');
                 exit();
             }
 
@@ -545,7 +544,7 @@ class UtilisateurController extends Controller
             }
         }
 
-        header('Location: ../utilisateur/settings');
+        header('Location: ' . WEBROOT . '/utilisateur/settings');
         exit();
     }
 
@@ -560,7 +559,7 @@ class UtilisateurController extends Controller
         // Message d'erreur à afficher
         $_SESSION['login_error'] = 'Nom d\'utilisateur ou mot de passe incorrect !';
         // Redirection vers la page de login
-        header('Location: ../utilisateur/login');
+        header('Location: ' . WEBROOT . '/utilisateur/login');
         exit();
     }
 
@@ -577,7 +576,7 @@ class UtilisateurController extends Controller
         // Message d'erreur à afficher
         $_SESSION['sign_in_error'] = $errMsg;
         // Redirection vers la page de login
-        header('Location: ../utilisateur/signIn');
+        header('Location: ' . WEBROOT . '/utilisateur/signIn');
         exit();
     }
 
@@ -590,7 +589,7 @@ class UtilisateurController extends Controller
         // Message de succès à afficher
         $_SESSION['sign_in_success'] = $successMsg;
         // Redirection vers la page de login
-        header('Location: ../utilisateur/login');
+        header('Location: ' . WEBROOT . '/utilisateur/login');
         exit();
     }
 }

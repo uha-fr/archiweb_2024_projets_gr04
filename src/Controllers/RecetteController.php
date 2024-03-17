@@ -34,7 +34,7 @@ class RecetteController extends Controller {
                     $recettes = $recetteModel->findByIdsAliments($alimentsFrigo);
                     setcookie('r', json_encode($recettes), time() + 3600, '/');
                 }else{
-                    header('Location: ./');
+                    header('Location: ' . WEBROOT . '/');
                     exit;
                 }
             }else{
@@ -133,7 +133,7 @@ class RecetteController extends Controller {
                     $ingredients = $_POST['aliments'];
 
                     if(! $this->valideArrayNumeric($ingredients)) {
-                        header('Location: ../');
+                        header('Location: ' . WEBROOT . '/');
                         exit;
                     }
                 }
@@ -155,7 +155,7 @@ class RecetteController extends Controller {
                                         ->setQuantite(1);
                     $recetteAlimentModel->create();
                 }
-                header('Location: /recette');
+                header('Location: ' . WEBROOT . '/recette');
                 exit;
             }else{
                 $erreurs['nomVide'] = "Veuillez mettre un nom à votre recette";
@@ -206,7 +206,7 @@ class RecetteController extends Controller {
         $recetteModel = new RecetteModel();
         $recetteModel->supprimerRecetteById($id);
 
-        header('Location: ../');
+        header('Location: ' . WEBROOT . '/recette');
         exit;
     }
 

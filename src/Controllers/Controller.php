@@ -24,7 +24,7 @@ abstract class Controller {
 
     function verifUtilisateurConnecte() {
         if(!isset($_SESSION['utilisateur'])) {
-            header('Location: utilisateur/login');
+            header('Location: ' . WEBROOT . '/utilisateur/login');
             exit;
         }
     }

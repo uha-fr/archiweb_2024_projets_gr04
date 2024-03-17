@@ -26,7 +26,7 @@ class AdminController extends Controller {
             $user = $repo->find($this->secure($_POST['userId']));
             $nouveauRole = $this->secure($_POST['role']);
             if(!array_key_exists($nouveauRole, $roles)) {
-                header('Location: /');
+                header('Location: ' . WEBROOT . '/'); 
                 exit;
             }
             $user->setRole($nouveauRole);
@@ -68,8 +68,8 @@ class AdminController extends Controller {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if(!$_SESSION['utilisateur']['role'] == "admin") {
-            header('Location: .');
+        if($_SESSION['utilisateur']['role'] != "admin") {
+            header('Location: ' . WEBROOT . '/');
             exit;
         }
     }
