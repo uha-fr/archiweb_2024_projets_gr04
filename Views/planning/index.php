@@ -127,9 +127,9 @@ document.addEventListener('DOMContentLoaded', function() {
         $.ajax({
             url: '/planning/getRecettes',
             method: 'GET',
+            dataType: 'json',
             success: function(data) {
-                const recettes = JSON.parse(data);
-                recettes.forEach(function(recette) {
+                data.forEach(function(recette) {
                     calendar.addEvent({
                         title: recette.nom, 
                         start: recette.dateDebut,

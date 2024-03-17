@@ -5,11 +5,21 @@ namespace App\Models;
 class PlanningRecetteModel extends Model {
 
     protected $id;
+    protected $idPlanning;
     protected $idRecette;
     protected $date;
 
     public function __construct() {
-        $this->table = 'planning_recette';
+        $this->table = 'planningrecette';
+    }
+
+
+    public function findPlanningRecetteNameByPlanningId($planningId) {
+        $query = 'SELECT * 
+                    FROM `planningrecette` 
+                    JOIN recette on planningrecette.idRecette = recette.id
+                    WHERE idPlanning = \'' . $planningId . '\'';
+        return $this->executeQuery($query)->fetchAll();
     }
 
     /**
@@ -68,6 +78,26 @@ class PlanningRecetteModel extends Model {
     public function setDate($date)
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idPlanning
+     */ 
+    public function getIdPlanning()
+    {
+        return $this->idPlanning;
+    }
+
+    /**
+     * Set the value of idPlanning
+     *
+     * @return  self
+     */ 
+    public function setIdPlanning($idPlanning)
+    {
+        $this->idPlanning = $idPlanning;
 
         return $this;
     }

@@ -39,7 +39,17 @@ class PlanningController  extends Controller{
             //On récupère l'id du planning de l'utilisateur connecté pour ajouter des recettes à son planning
             $repoPlanning = new PlanningModel();
             $planningUser = $repoPlanning->findBy(['id_user' => $idUser]); //idPlanningUser est un tableau d'objet de PlanningModel. On aura forcement qu'on objet car on cherché par userId.
-            $idPlanningUser = $planningUser[0]->getId(); //On récupère l'id du planning de l'user connecté
+
+            //Si l'utilisateur n'a pas encore de planning
+            if($planningUser == null) {
+                $idPlanningUser = uniqid();
+                $repoPlanning->setId($idPlanningUser)
+                                ->setId_user($idUser);
+                $repoPlanning->create();
+            }else{
+                $idPlanningUser = $planningUser[0]->getId(); //On récupère l'id du planning de l'user connecté
+            }
+
             
             $dateDebut = new DateTime($data['start']);
             $dateFin = new DateTime($data['end']);
@@ -47,9 +57,11 @@ class PlanningController  extends Controller{
             $période = new DateInterval('P1D');
             $dateRange = new DatePeriod($dateDebut, $période, $dateFin->modify('+1 day')); 
 
+            
+
             foreach ($dateRange as $date) {
                 $recettePlanning = new PlanningRecetteModel();
-                $recettePlanning->setId($idPlanningUser)
+                $recettePlanning->setIdPlanning($idPlanningUser)
                                 ->setIdRecette($data['idRecette']) 
                                 ->setDate($date->format('Y-m-d'));
                 $recettePlanning->create();
@@ -89,18 +101,19 @@ class PlanningController  extends Controller{
         
         
 
-        $repoRecette = new PlanningRecetteModel();
-
-        $recettes = $repoRecette->findBy(['id' => $idPlanningUser]); 
+        $repoPlanningRecette = new PlanningRecetteModel();
+        $recettes = $repoPlanningRecette->findPlanningRecetteNameByPlanningId($idPlanningUser); 
     
 
         $recettesArray = array_map(function($recette) {
             return [
-                'nom' => $recette->getNom(), 
-                'dateDebut' => $recette->getDate(), 
-                'dateFin' => $recette->getDate(), 
+                'nom' => $recette->nom, 
+                'dateDebut' => $recette->date, 
+                'dateFin' => $recette->date, 
             ];
         }, $recettes);
+
+        
     
         header('Content-Type: application/json');
         echo json_encode($recettesArray);
