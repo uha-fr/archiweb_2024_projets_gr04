@@ -1,6 +1,6 @@
 <head>
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@latest/main.min.css' rel='stylesheet' />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.9.0/locales/fr.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.9.0/locales/fr.js"></script> -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@latest/main.min.js'></script>
     <title>Mon planning</title>
     <style>
@@ -14,7 +14,7 @@
             margin: 40px auto;
             padding: 10px;
             background-color: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
         }
 
@@ -30,7 +30,7 @@
             padding: 15px;
             background: #fff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .btn-primary {
@@ -57,7 +57,7 @@
             <div class="col-md-4 ">
                 <select id="recette" class="form-control" onchange="showDescription()">
                     <option value="">Choisir une recette</option>
-                    <?php foreach($recettes as $recette): ?>
+                    <?php foreach ($recettes as $recette) : ?>
                         <option value="<?= htmlspecialchars($recette->id) ?>" data-description="<?= htmlspecialchars($recette->description) ?>"><?= htmlspecialchars($recette->nom) ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -66,11 +66,11 @@
                 <input type="date" id="dateDebut" class="form-control" required>
             </div>
             <div class="col-md-4">
-                <input type="date" id="dateFin" class="form-control" required>
+                <input type="date" id="dateFin" class="form-control">
             </div>
             <div class="col-md-4">
 
-            <button type="submit" class="btn btn-primary mt-4">Ajouter la recette</button>
+                <button type="submit" class="btn btn-primary mt-4">Ajouter la recette</button>
             </div>
         </div>
         <div class="col-md-12 mt-3 mx-auto ">
@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     </form>
 
 
@@ -94,111 +94,4 @@ if (!isset($events)) {
 }
 ?>
 
-
-<script>
-
-function showDescription() {
-    var select = document.getElementById('recette');
-    var description = select.options[select.selectedIndex].getAttribute('data-description');
-    var descriptionDiv = document.getElementById('recetteDescription');
-    var cardText = descriptionDiv.querySelector('.card-text');
-
-    if (description) {
-        cardText.textContent = description;
-        descriptionDiv.style.display = 'block';
-    } else {
-        descriptionDiv.style.display = 'none';
-    }
-}
-
-
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'fr',
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek'
-    },
-});
-
-
-
-    calendar.render();
-
-    fetchAndDisplayRecettes();
-
-    function fetchAndDisplayRecettes() {
-        $.ajax({
-            url: '/planning/getRecettes',
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                data.forEach(function(recette) {
-                    let endDate = new Date(recette.dateFin);
-                    endDate.setDate(endDate.getDate() + 1);
-                    
-                    calendar.addEvent({
-                        title: recette.nom, 
-                        start: recette.dateDebut,
-                        end: endDate.toISOString().split('T')[0]
-                    });
-                });
-            },
-            error: function() {
-                console.error("Erreur lors de la récupération des recettes.");
-            }
-        });
-    }
-
-    document.getElementById('eventForm').addEventListener('submit', function(e) {
-        e.preventDefault();  
-        var recetteSelect = document.getElementById('recette');
-        var recette = recetteSelect.options[recetteSelect.selectedIndex].text;
-        var dateDebut = document.getElementById('dateDebut').value;
-         dateFin = document.getElementById('dateFin').value;
-
-        if (!recette || !dateDebut || !dateFin) {
-            alert("Tous les champs sont requis !");
-            return;
-        }
-
-        let endDate = new Date(dateFin);
-        endDate.setDate(endDate.getDate() + 1);
-
-        calendar.addEvent({
-            title: recette,
-            start: dateDebut,
-            end: endDate.toISOString().split('T')[0]
-        });
-
-        var myJson = {
-            idRecette: recetteSelect.value,
-            start: dateDebut,
-            end: dateFin
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: '/planning/addRecette',
-            data: JSON.stringify(myJson),
-            contentType: 'application/json',
-            success: function(response) {
-                if(response == 200) {
-                    console.log("Succès de l'ajout de la recette.");
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Erreur lors de la requête :', error);
-            }
-        });
-
-        document.getElementById('eventForm').reset();
-    });
-});
-</script>
-
+<script type="text/javascript" src="/public/js/calendrier.js"></script>

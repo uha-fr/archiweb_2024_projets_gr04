@@ -7,7 +7,8 @@ class PlanningRecetteModel extends Model {
     protected $id;
     protected $idPlanning;
     protected $idRecette;
-    protected $date;
+    protected $dateDebut;
+    protected $dateFin;
 
     public function __construct() {
         $this->table = 'planningrecette';
@@ -63,26 +64,6 @@ class PlanningRecetteModel extends Model {
     }
 
     /**
-     * Get the value of date
-     */ 
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * Set the value of date
-     *
-     * @return  self
-     */ 
-    public function setDate($date)
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
      * Get the value of idPlanning
      */ 
     public function getIdPlanning()
@@ -98,6 +79,46 @@ class PlanningRecetteModel extends Model {
     public function setIdPlanning($idPlanning)
     {
         $this->idPlanning = $idPlanning;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of date
+     */ 
+    public function getDateDebut()
+    {
+        return $this->dateDebut;
+    }
+
+    /**
+     * Set the value of date
+     *
+     * @return  self
+     */ 
+    public function setDateDebut($date)
+    {
+        $this->dateDebut = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of date
+     */ 
+    public function getDateFin()
+    {
+        return $this->dateFin;
+    }
+
+    /**
+     * Set the value of date
+     *
+     * @return  self
+     */ 
+    public function setDateFin($date)
+    {
+        $this->dateFin = $date;
 
         return $this;
     }

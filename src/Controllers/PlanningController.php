@@ -1,32 +1,27 @@
 <?php
 
-
 namespace App\Controllers;
+
 use App\Models\PlanningModel;
 use App\Models\PlanningRecetteModel;
-use DateInterval;
-use DatePeriod;
-use DateTime;
 
-
-class PlanningController  extends Controller{
-    public function index() {
+class PlanningController extends Controller
+{
+    public function index()
+    {
         $planningModel = new PlanningModel();
-        $recettes = $planningModel->findAll("recette"); 
-
-        // error_log(print_r($recettes, true)); 
+        $recettes = $planningModel->findAll("recette");
 
         $this->render('planning/index.php', ['recettes' => $recettes]);
-
     }
-
 
     /**
      * Ajoute une ou plusieurs recettes dans un planning
      *
      * @return void
      */
-    public function addRecette() {
+    public function addRecette()
+    {
         $this->verifUtilisateurConnecte();
 
         $jsonData = file_get_contents('php://input');
@@ -36,93 +31,58 @@ class PlanningController  extends Controller{
         if ($data !== null) {
             $idUser = $this->getUserIdCo(); // Id de l'utilisateur connecté
 
-            //On récupère l'id du planning de l'utilisateur connecté pour ajouter des recettes à son planning
             $repoPlanning = new PlanningModel();
-            $planningUser = $repoPlanning->findBy(['id_user' => $idUser]); //idPlanningUser est un tableau d'objet de PlanningModel. On aura forcement qu'on objet car on cherché par userId.
+            $planningUser = $repoPlanning->findBy(['id_user' => $idUser]);
 
-            //Si l'utilisateur n'a pas encore de planning
-            if($planningUser == null) {
+            if ($planningUser == null) {
                 $idPlanningUser = uniqid();
                 $repoPlanning->setId($idPlanningUser)
-                                ->setId_user($idUser);
+                    ->setId_user($idUser);
                 $repoPlanning->create();
-            }else{
-                $idPlanningUser = $planningUser[0]->getId(); //On récupère l'id du planning de l'user connecté
+            } else {
+                $idPlanningUser = $planningUser[0]->getId();
             }
 
-            
-            $dateDebut = new DateTime($data['start']);
-            $dateFin = new DateTime($data['end']);
-
-            $période = new DateInterval('P1D');
-            $dateRange = new DatePeriod($dateDebut, $période, $dateFin->modify('+1 day')); 
-
-            
-
-            foreach ($dateRange as $date) {
-                $recettePlanning = new PlanningRecetteModel();
-                $recettePlanning->setIdPlanning($idPlanningUser)
-                                ->setIdRecette($data['idRecette']) 
-                                ->setDate($date->format('Y-m-d'));
-                $recettePlanning->create();
-            }
-
-
-            
-            /* TODO :
-            // Attention : il peut y avoir plusieurs recette à ajouter car la date est dépendante de start et end (voir ligne 141/142 de Views/planning/index.php)
-            // Il faut donc vérifier s'il y a plusieurs jours entre start et end. Si oui, il faut ajouter la même recette pour plusieurs dates, donc on va créer plusieurs objet PlanningRecetteModel
-            
-            //Exemple de création l'objet PlanningRecetteModel et de remplissage de ses valeurs
             $recettePlanning = new PlanningRecetteModel();
-            $recettePlanning->setId($idPlanningUser)
-                            ->setIdRecette(...)
-                            ->setDate(...);
+            $recettePlanning->setIdPlanning($idPlanningUser)
+                ->setIdRecette($data['idRecette'])
+                ->setDateDebut($data['start'])
+                ->setDateFin($data['end']);
             $recettePlanning->create();
-            */
+
             echo 200;
         }
     }
 
-    public function getRecettes() {
+    public function getRecettes()
+    {
         $this->verifUtilisateurConnecte();
-        $idUser = $this->getUserIdCo(); 
+        $idUser = $this->getUserIdCo();
 
         $repoPlanning = new PlanningModel();
 
-        $planningUser = $repoPlanning->findBy(['id_user' => $idUser]); 
-        
+        $planningUser = $repoPlanning->findBy(['id_user' => $idUser]);
+
         if (empty($planningUser)) {
             echo json_encode([]);
             return;
         }
-    
-        $idPlanningUser = $planningUser[0]->getId(); 
-        
-        
+
+        $idPlanningUser = $planningUser[0]->getId();
 
         $repoPlanningRecette = new PlanningRecetteModel();
-        $recettes = $repoPlanningRecette->findPlanningRecetteNameByPlanningId($idPlanningUser); 
-    
+        $recettes = $repoPlanningRecette->findPlanningRecetteNameByPlanningId($idPlanningUser);
 
-        $recettesArray = array_map(function($recette) {
+
+        $recettesArray = array_map(function ($recette) {
             return [
-                'nom' => $recette->nom, 
-                'dateDebut' => $recette->date, 
-                'dateFin' => $recette->date, 
+                'nom' => $recette->nom,
+                'dateDebut' => $recette->dateDebut,
+                'dateFin' => $recette->dateFin,
             ];
         }, $recettes);
 
-        
-    
         header('Content-Type: application/json');
         echo json_encode($recettesArray);
     }
-    
-    
-    
-    
-
 }
-
-
