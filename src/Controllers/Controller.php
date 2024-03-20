@@ -23,11 +23,8 @@ abstract class Controller {
     }
 
     function verifUtilisateurConnecte() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
         if(!isset($_SESSION['utilisateur'])) {
-            header('Location: utilisateur/login');
+            header('Location: ' . WEBROOT . '/utilisateur/login');
             exit;
         }
     }

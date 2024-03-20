@@ -5,11 +5,22 @@ namespace App\Models;
 class PlanningRecetteModel extends Model {
 
     protected $id;
+    protected $idPlanning;
     protected $idRecette;
-    protected $date;
+    protected $dateDebut;
+    protected $dateFin;
 
     public function __construct() {
-        $this->table = 'planning_recette';
+        $this->table = 'planningrecette';
+    }
+
+
+    public function findPlanningRecetteNameByPlanningId($planningId) {
+        $query = 'SELECT * 
+                    FROM `planningrecette` 
+                    JOIN recette on planningrecette.idRecette = recette.id
+                    WHERE idPlanning = \'' . $planningId . '\'';
+        return $this->executeQuery($query)->fetchAll();
     }
 
     /**
@@ -53,11 +64,31 @@ class PlanningRecetteModel extends Model {
     }
 
     /**
+     * Get the value of idPlanning
+     */ 
+    public function getIdPlanning()
+    {
+        return $this->idPlanning;
+    }
+
+    /**
+     * Set the value of idPlanning
+     *
+     * @return  self
+     */ 
+    public function setIdPlanning($idPlanning)
+    {
+        $this->idPlanning = $idPlanning;
+
+        return $this;
+    }
+
+    /**
      * Get the value of date
      */ 
-    public function getDate()
+    public function getDateDebut()
     {
-        return $this->date;
+        return $this->dateDebut;
     }
 
     /**
@@ -65,9 +96,29 @@ class PlanningRecetteModel extends Model {
      *
      * @return  self
      */ 
-    public function setDate($date)
+    public function setDateDebut($date)
     {
-        $this->date = $date;
+        $this->dateDebut = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of date
+     */ 
+    public function getDateFin()
+    {
+        return $this->dateFin;
+    }
+
+    /**
+     * Set the value of date
+     *
+     * @return  self
+     */ 
+    public function setDateFin($date)
+    {
+        $this->dateFin = $date;
 
         return $this;
     }

@@ -15,8 +15,12 @@ class Model extends Database {
      *
      * @return array
      */
-    public function findAll():array {
-        $query = $this->executeQuery('SELECT * FROM ' . $this->table);
+    public function findAll($table = "none" ):array {
+        if($table == "none"){
+            $query = $this->executeQuery('SELECT * FROM ' . $this->table);
+        }else{
+            $query = $this->executeQuery('SELECT * FROM ' . $table);
+        }
         return $query->fetchAll();
     }
 

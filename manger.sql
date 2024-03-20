@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 07 mars 2024 à 13:28
+-- Généré le : dim. 17 mars 2024 à 10:32
 -- Version du serveur : 8.0.31
 -- Version de PHP : 7.3.12
 
@@ -394,6 +394,30 @@ INSERT INTO `aliment` (`id`, `nom`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `favori`
+--
+
+DROP TABLE IF EXISTS `favori`;
+CREATE TABLE IF NOT EXISTS `favori` (
+  `id` varchar(13) NOT NULL,
+  `idUtilisateur` int DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `idFavori` varchar(13) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idUtilisateur` (`idUtilisateur`)
+) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `favori`
+--
+
+INSERT INTO `favori` (`id`, `idUtilisateur`, `type`, `idFavori`) VALUES
+('65f376193234b', 1, 'recette', '7'),
+('65f37612200ca', 1, 'recette', '65eb28751f25c');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `notification`
 --
 
@@ -418,7 +442,8 @@ INSERT INTO `notification` (`id`, `type`, `idUserOrigine`, `idUserDest`, `date`)
 ('65e99ff3cb87f', 'demande-nutritionniste', 1, 4, '2024-03-07 11:07:31'),
 ('65e9b25cf0d90', 'demande-nutritionniste', 1, 7, '2024-03-07 12:26:04'),
 ('65e9b25d82cfb', 'demande-nutritionniste', 1, 10, '2024-03-07 12:26:05'),
-('65e9b25de2f16', 'demande-nutritionniste', 1, 11, '2024-03-07 12:26:05');
+('65e9b25de2f16', 'demande-nutritionniste', 1, 11, '2024-03-07 12:26:05'),
+('65f6c68c34655', 'demande-nutritionniste', 1, 1, '2024-03-17 10:31:40');
 
 -- --------------------------------------------------------
 
@@ -428,26 +453,72 @@ INSERT INTO `notification` (`id`, `type`, `idUserOrigine`, `idUserDest`, `date`)
 
 DROP TABLE IF EXISTS `planning`;
 CREATE TABLE IF NOT EXISTS `planning` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` varchar(13) NOT NULL,
   `id_user` int NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `planning`
+--
+
+INSERT INTO `planning` (`id`, `id_user`, `date`) VALUES
+('65f6bf11b0168', 1, '0000-00-00');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `planning_recette`
+-- Structure de la table `planningrecette`
 --
 
+DROP TABLE IF EXISTS `planningrecette`;
 DROP TABLE IF EXISTS `planning_recette`;
-CREATE TABLE IF NOT EXISTS `planning_recette` (
+CREATE TABLE IF NOT EXISTS `planningrecette` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `idPlanning` varchar(13) DEFAULT NULL,
   `idRecette` varchar(13) DEFAULT NULL,
   `date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
+  KEY `idPlanning` (`idPlanning`),
   KEY `idRecette` (`idRecette`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `planningrecette`
+--
+
+INSERT INTO `planningrecette` (`id`, `idPlanning`, `idRecette`, `date`) VALUES
+(3, '65f6bf11b0168', '10', '2024-03-11'),
+(4, '65f6bf11b0168', '10', '2024-03-12'),
+(5, '65f6bf11b0168', '10', '2024-03-13'),
+(6, '65f6bf11b0168', '10', '2024-03-14'),
+(7, '65f6bf11b0168', '10', '2024-03-15'),
+(8, '65f6bf11b0168', '10', '2024-03-16'),
+(9, '65f6bf11b0168', '10', '2024-03-17'),
+(10, '65f6bf11b0168', '6', '2024-03-11'),
+(11, '65f6bf11b0168', '6', '2024-03-12'),
+(12, '65f6bf11b0168', '6', '2024-03-13'),
+(13, '65f6bf11b0168', '6', '2024-03-14'),
+(14, '65f6bf11b0168', '6', '2024-03-15'),
+(15, '65f6bf11b0168', '5', '2024-03-11'),
+(16, '65f6bf11b0168', '5', '2024-03-12'),
+(17, '65f6bf11b0168', '5', '2024-03-13'),
+(18, '65f6bf11b0168', '5', '2024-03-14'),
+(19, '65f6bf11b0168', '5', '2024-03-15'),
+(20, '65f6bf11b0168', '5', '2024-03-16'),
+(21, '65f6bf11b0168', '5', '2024-03-17'),
+(22, '65f6bf11b0168', '5', '2024-03-18'),
+(23, '65f6bf11b0168', '5', '2024-03-19'),
+(24, '65f6bf11b0168', '5', '2024-03-20'),
+(25, '65f6bf11b0168', '5', '2024-03-21'),
+(26, '65f6bf11b0168', '5', '2024-03-22'),
+(27, '65f6bf11b0168', '5', '2024-03-23'),
+(28, '65f6bf11b0168', '5', '2024-03-24'),
+(29, '65f6bf11b0168', '5', '2024-03-25'),
+(30, '65f6bf11b0168', '5', '2024-03-26'),
+(31, '65f6bf11b0168', '5', '2024-03-27'),
+(32, '65f6bf11b0168', '5', '2024-03-28');
 
 -- --------------------------------------------------------
 
@@ -486,11 +557,12 @@ INSERT INTO `recette` (`id`, `nom`, `description`, `id_utilisateur`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `recette_aliment`
+-- Structure de la table `recettealiment`
 --
 
+DROP TABLE IF EXISTS `recettealiment`;
 DROP TABLE IF EXISTS `recette_aliment`;
-CREATE TABLE IF NOT EXISTS `recette_aliment` (
+CREATE TABLE IF NOT EXISTS `recettealiment` (
   `id_recette` varchar(13) NOT NULL,
   `id_aliment` int NOT NULL,
   `quantite` varchar(100) DEFAULT NULL,
@@ -499,10 +571,10 @@ CREATE TABLE IF NOT EXISTS `recette_aliment` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `recette_aliment`
+-- Déchargement des données de la table `recettealiment`
 --
 
-INSERT INTO `recette_aliment` (`id_recette`, `id_aliment`, `quantite`) VALUES
+INSERT INTO `recettealiment` (`id_recette`, `id_aliment`, `quantite`) VALUES
 ('3', 589, '1'),
 ('3', 568, '1'),
 ('3', 364, '1'),
@@ -519,31 +591,48 @@ INSERT INTO `recette_aliment` (`id_recette`, `id_aliment`, `quantite`) VALUES
 ('5', 387, '1'),
 ('6', 522, '1'),
 ('6', 585, '1'),
-('65c62447b64e4', 591, NULL);
+('65eaebd59077b', 399, '1'),
+('65eaeafc177ff', 417, '1'),
+('65eaeafc177ff', 364, '1'),
+('65eaeafc177ff', 476, '1'),
+('65eaebd59077b', 380, '1'),
+('65eaeafc177ff', 360, '1'),
+('65eaeafc177ff', 415, '1'),
+('65c62447b64e4', 591, NULL),
+('65eb0bdf7c0d1', 398, '1'),
+('65eb0bdf7c0d1', 476, '1'),
+('65eb28751f25c', 386, '1'),
+('65eb28751f25c', 475, '1');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `relation_nutritionniste`
+-- Structure de la table `relationnutritionniste`
 --
 
+DROP TABLE IF EXISTS `relationnutritionniste`;
 DROP TABLE IF EXISTS `relation_nutritionniste`;
-CREATE TABLE IF NOT EXISTS `relation_nutritionniste` (
+CREATE TABLE IF NOT EXISTS `relationnutritionniste` (
   `id` varchar(13) NOT NULL,
   `idNutritionniste` int DEFAULT NULL,
   `idClient` int DEFAULT NULL,
+  `idPlanningPropose` int DEFAULT NULL,
+  `nutritionnisteAccesPlanning` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idNutritionniste` (`idNutritionniste`),
-  KEY `idClient` (`idClient`)
+  KEY `idClient` (`idClient`),
+  KEY `fk_idplanningpropose` (`idPlanningPropose`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2147483648 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `relation_nutritionniste`
+-- Déchargement des données de la table `relationnutritionniste`
 --
 
-INSERT INTO `relation_nutritionniste` (`id`, `idNutritionniste`, `idClient`) VALUES
-('6T454', 8, 2),
-('432E2E2', 7, 2);
+INSERT INTO `relationnutritionniste` (`id`, `idNutritionniste`, `idClient`, `idPlanningPropose`, `nutritionnisteAccesPlanning`) VALUES
+('6T454', 8, 2, NULL, NULL),
+('432E2E2', 1, 2, NULL, 0),
+('ee', 1, 10, NULL, 1),
+('dededed', 1, 11, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -567,7 +656,7 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
 --
 
 INSERT INTO `utilisateurs` (`id`, `role`, `nom_utilisateur`, `mdp`, `email`, `token`) VALUES
-(1, 'admin', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr', NULL),
+(1, 'nutritionniste', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr', NULL),
 (4, 'nutritionniste', 'Jean', 'motdepasse1', 'admin1@example.com', NULL),
 (5, 'utilisateur', 'utilisateur1', 'motdepasse2', 'utilisateur1@example.com', NULL),
 (3, 'nutritionniste', 'theo2', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'dded@de.com', NULL),

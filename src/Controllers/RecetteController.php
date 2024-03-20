@@ -34,7 +34,7 @@ class RecetteController extends Controller {
                     $recettes = $recetteModel->findByIdsAliments($alimentsFrigo);
                     setcookie('r', json_encode($recettes), time() + 3600, '/');
                 }else{
-                    header('Location: ./');
+                    header('Location: ' . WEBROOT . '/');
                     exit;
                 }
             }else{
@@ -123,8 +123,6 @@ class RecetteController extends Controller {
             $this->setIngredientFrigo($ingredientsEdit);
         }
 
-        
-        
         $erreurs = [];
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST['nom']) && !empty($_POST['nom'])) {
@@ -135,21 +133,21 @@ class RecetteController extends Controller {
                     $ingredients = $_POST['aliments'];
 
                     if(! $this->valideArrayNumeric($ingredients)) {
-                        header('Location: ../');
+                        header('Location: ' . WEBROOT . '/');
                         exit;
                     }
                 }
                 if($idRecette != null) {
                     $recetteModel->supprimerRecetteById($idRecette);
                 }
-                
+
                 $idRecette = uniqid();
                 $recetteModel->setId($idRecette)
                             ->setNom($nomRecette)
                             ->setDescription($descriptionRecette)
                             ->setIdUtilisateur($this->getUserIdCo());
                 $recetteModel->create();
-                
+
                 foreach($ingredients as $idIngredient) {
                     $recetteAlimentModel = new RecetteAlimentModel();
                     $recetteAlimentModel->setIdRecette($idRecette)
@@ -157,7 +155,7 @@ class RecetteController extends Controller {
                                         ->setQuantite(1);
                     $recetteAlimentModel->create();
                 }
-                header('Location: /recette');
+                header('Location: ' . WEBROOT . '/recette');
                 exit;
             }else{
                 $erreurs['nomVide'] = "Veuillez mettre un nom à votre recette";
@@ -208,7 +206,7 @@ class RecetteController extends Controller {
         $recetteModel = new RecetteModel();
         $recetteModel->supprimerRecetteById($id);
 
-        header('Location: ../');
+        header('Location: ' . WEBROOT . '/recette');
         exit;
     }
 
