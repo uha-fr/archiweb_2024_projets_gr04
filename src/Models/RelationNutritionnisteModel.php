@@ -7,9 +7,21 @@ class RelationNutritionnisteModel extends Model {
     protected $id;
     protected $idNutritionniste;
     protected $idClient;
+    protected $idPlanningPropose;
+    protected $nutritionnisteAccesPlanning;
 
     public function __construct() {
         $this->table = 'relationnutritionniste';
+    }
+
+    public function findByLimitesUtilisateursRelationNutritionnisteDetails($premierItem, $nbItem, $idNutritionniste) {
+        $query = 'SELECT utilisateurs.id, nom_utilisateur, nutritionnisteAccesPlanning AS acces
+                    FROM relationnutritionniste
+                    JOIN utilisateurs ON utilisateurs.id = relationnutritionniste.idClient
+                    WHERE relationnutritionniste.idNutritionniste = ' . $idNutritionniste .
+                    ' LIMIT ' . $premierItem . ', ' .$nbItem;
+                    
+        return $this->executeQuery($query)->fetchAll();
     }
 
     /**
@@ -68,6 +80,46 @@ class RelationNutritionnisteModel extends Model {
     public function setIdClient($idClient)
     {
         $this->idClient = $idClient;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of idPlanningPropose
+     */ 
+    public function getIdPlanningPropose()
+    {
+        return $this->idPlanningPropose;
+    }
+
+    /**
+     * Set the value of idPlanningPropose
+     *
+     * @return  self
+     */ 
+    public function setIdPlanningPropose($idPlanningPropose)
+    {
+        $this->idPlanningPropose = $idPlanningPropose;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nutritionnisteAccesPlanning
+     */ 
+    public function getNutritionnisteAccesPlanning()
+    {
+        return $this->nutritionnisteAccesPlanning;
+    }
+
+    /**
+     * Set the value of nutritionnisteAccesPlanning
+     *
+     * @return  self
+     */ 
+    public function setNutritionnisteAccesPlanning($nutritionnisteAccesPlanning)
+    {
+        $this->nutritionnisteAccesPlanning = $nutritionnisteAccesPlanning;
 
         return $this;
     }

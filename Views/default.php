@@ -24,6 +24,10 @@
                         <li class="nav-item"><a class="nav-link" href="/recette">Recette</a></li>
                         <li class="nav-item"><a class="nav-link" href="/planning">Planning</a></li>
                         <li class="nav-item"><a class="nav-link" href="/rechercheNutritionniste">Nutritionnistes</a></li>
+                        <?php if($_SESSION['utilisateur']['role'] == "nutritionniste"): ?>
+                            <li class="nav-item"><a class="nav-link" href="/nutritionnisteGestionRelation">Gestion des relations</a></li>
+                        <?php endif ?>
+                        <li class="nav-item sign-in-up"><a class="nav-link" href="/utilisateur/logout">Deconnexion</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <?= $_SESSION['utilisateur']['nom_utilisateur'] ?>
