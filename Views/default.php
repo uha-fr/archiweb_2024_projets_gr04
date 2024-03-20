@@ -24,10 +24,6 @@
                         <li class="nav-item"><a class="nav-link" href="/recette">Recette</a></li>
                         <li class="nav-item"><a class="nav-link" href="/planning">Planning</a></li>
                         <li class="nav-item"><a class="nav-link" href="/rechercheNutritionniste">Nutritionnistes</a></li>
-                        <?php if($_SESSION['utilisateur']['role'] == "nutritionniste"): ?>
-                            <li class="nav-item"><a class="nav-link" href="/nutritionnisteGestionRelation">Gestion des relations</a></li>
-                        <?php endif ?>
-                        <li class="nav-item sign-in-up"><a class="nav-link" href="/utilisateur/logout">Deconnexion</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <?= $_SESSION['utilisateur']['nom_utilisateur'] ?>
@@ -45,6 +41,9 @@
                                 <?php if($_SESSION['utilisateur']['role'] == "admin"): ?>
                                     <li><a class="dropdown-item" href="/admin">Administration</a></li>
                                 <?php endif ?>
+                                <?php if($_SESSION['utilisateur']['role'] == "nutritionniste"): ?>
+                                    <li><a class="dropdown-item" href="/nutritionnisteGestionRelation">Gestion des relations</a></li>
+                                <?php endif ?>
                                 <li><a class="dropdown-item" href="/utilisateur/settings">Paramètres</a></li>
                                 <li><a class="dropdown-item" href="/utilisateur/logout">Déconnexion</a></li>
                             </ul>
@@ -60,7 +59,7 @@
 
     
 
-    <div class="conteneur" style="margin-top: 66px;"> 
+    <div class="conteneur" style="margin-top: 72px;"> 
         <?= $contenu ?>
     </div>
 

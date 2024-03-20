@@ -10921,3 +10921,7 @@ header.masthead .bg-circle-4 {
     font-size: 4rem;
   }
 }
+
+main {
+  padding-top: 10px;
+}
