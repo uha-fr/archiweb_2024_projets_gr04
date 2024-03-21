@@ -2,7 +2,7 @@
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@latest/main.min.css' rel='stylesheet' />
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.9.0/locales/fr.js"></script> -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@latest/main.min.js'></script>
-    <title>Mon planning</title>
+    <title><?= $titre ?></title>
     <style>
         body {
             background-color: #f7f7f7;
@@ -50,39 +50,49 @@
 </head>
 
 <main>
-    <div id="calendar"></div>
-    <h2>Ajouter une recette au planning</h2>
-    <form id="eventForm" class="mt-3">
-        <div class="row justify-content-center">
-            <div class="col-md-4 ">
-                <select id="recette" class="form-control" onchange="showDescription()">
-                    <option value="">Choisir une recette</option>
-                    <?php foreach ($recettes as $recette) : ?>
-                        <option value="<?= htmlspecialchars($recette->id) ?>" data-description="<?= htmlspecialchars($recette->description) ?>"><?= htmlspecialchars($recette->nom) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <input type="date" id="dateDebut" class="form-control" required>
-            </div>
-            <div class="col-md-4">
-                <input type="date" id="dateFin" class="form-control">
-            </div>
-            <div class="col-md-4">
+    <?php if(isset($client)): ?>
+        <h3><?= $titre ?></h3>
+    <?php endif ?>
+    <?php if(isset($relation) && $relation->getNutritionnisteAccesPlanning() == 1): ?>
+        <p><?= $client->getNomUtilisateur() ?> vous a donné l'accès à l'édition de son planning</p>
+    <?php endif ?>
 
-                <button type="submit" class="btn btn-primary mt-4">Ajouter la recette</button>
-            </div>
-        </div>
-        <div class="col-md-12 mt-3 mx-auto ">
-            <div id="recetteDescription" class="card" style="display:none;">
-                <div class="card-body">
-                    <h5 class="card-title">Description</h5>
-                    <p class="card-text"></p>
+    <div id="calendar"></div>
+
+    <?php if ($controller == 'Planning' || isset($relation) && $relation->getNutritionnisteAccesPlanning() == 1) : ?>
+        <h2>Ajouter une recette au planning</h2>
+        <form id="eventForm" class="mt-3">
+            <div class="row justify-content-center">
+                <div class="col-md-4 ">
+                    <select id="recette" class="form-control" onchange="showDescription()">
+                        <option value="">Choisir une recette</option>
+                        <?php foreach ($recettes as $recette) : ?>
+                            <option value="<?= htmlspecialchars($recette->id) ?>" data-description="<?= htmlspecialchars($recette->description) ?>"><?= htmlspecialchars($recette->nom) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" id="dateDebut" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" id="dateFin" class="form-control">
+                </div>
+                <div class="col-md-4">
+
+                    <button type="submit" class="btn btn-primary mt-4">Ajouter la recette</button>
                 </div>
             </div>
-        </div>
-        </div>
-    </form>
+            <div class="col-md-12 mt-3 mx-auto ">
+                <div id="recetteDescription" class="card" style="display:none;">
+                    <div class="card-body">
+                        <h5 class="card-title">Description</h5>
+                        <p class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+    <?php endif ?>
 
 
 </main>
@@ -94,4 +104,114 @@ if (!isset($events)) {
 }
 ?>
 
-<script type="text/javascript" src="/public/js/calendrier.js"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'fr',
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+        });
+        calendar.render();
+
+        let idClient = undefined;
+        <?php if(isset($client) && $client): ?>
+            idClient = <?php echo json_encode($client->getId()) ?>;
+        <?php else: ?>
+            idClient = 'mine';
+        <?php endif ?>
+
+
+        $.ajax({
+            url: '/planning/getRecettes',
+            method: 'POST',
+            data: JSON.stringify(idClient),
+            dataType: 'json',
+            success: function(data) {
+                data.forEach(function(recette) {
+                    let endDate = new Date(recette.dateFin);
+                    endDate.setDate(endDate.getDate() + 1);
+
+                    calendar.addEvent({
+                        title: recette.nom,
+                        start: recette.dateDebut,
+                        end: endDate.toISOString().split('T')[0]
+                    });
+                });
+            },
+            error: function() {
+                console.error("Erreur lors de la récupération des recettes.");
+            }
+        });
+
+        let formAddRecette = document.getElementById('eventForm');
+        if(formAddRecette) {
+            formAddRecette.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var recetteSelect = document.getElementById('recette');
+                var recette = recetteSelect.options[recetteSelect.selectedIndex].text;
+                var dateDebut = document.getElementById('dateDebut').value;
+                var dateFin = document.getElementById('dateFin').value;
+
+                if (!dateFin) {
+                    dateFin = dateDebut;
+                }
+
+                if (!recette || !dateDebut) {
+                    alert("Champs 'recette' et 'date de début' requis");
+                    return;
+                }
+
+                let endDate = new Date(dateFin);
+                endDate.setDate(endDate.getDate() + 1);
+
+                calendar.addEvent({
+                    title: recette,
+                    start: dateDebut,
+                    end: endDate.toISOString().split('T')[0]
+                });
+
+                var myJson = {
+                    idRecette: recetteSelect.value,
+                    start: dateDebut,
+                    end: dateFin
+                };
+
+                <?php if(isset($client) && $client): ?>
+                    myJson.idClient = <?php echo json_encode($client->getId()) ?>;
+                <?php endif ?>
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/planning/addRecette',
+                    data: JSON.stringify(myJson),
+                    contentType: 'application/json',
+                    error: function(xhr, status, error) {
+                        console.error('Erreur lors de la requête :', error);
+                    }
+                });
+
+                document.getElementById('eventForm').reset();
+            });
+        }
+    });
+
+    function showDescription() {
+        var select = document.getElementById('recette');
+        var description = select.options[select.selectedIndex].getAttribute('data-description');
+        var descriptionDiv = document.getElementById('recetteDescription');
+        var cardText = descriptionDiv.querySelector('.card-text');
+
+        if (description) {
+            cardText.textContent = description;
+            descriptionDiv.style.display = 'block';
+        } else {
+            descriptionDiv.style.display = 'none';
+        }
+    }
+</script>

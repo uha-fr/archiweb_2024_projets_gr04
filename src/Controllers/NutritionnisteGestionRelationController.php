@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\RecetteModel;
 use App\Models\RelationNutritionnisteModel;
+use App\Models\UtilisateursModel;
 
 class NutritionnisteGestionRelationController extends Controller {
     public function index() {
@@ -30,6 +32,33 @@ class NutritionnisteGestionRelationController extends Controller {
             'relations' => $items,
             'pageActuelle' => $pageActuelle,
             'nbPage' => $nbPage,
+        ]);
+    }
+
+    public function voirPlanning(int $idClient) {
+        $this->verifUtilisateurConnecte();
+        $this->isNutritionniste();
+
+        $idClient = $this->secure($idClient);
+
+        $repoUtilisateur = new UtilisateursModel();
+        $client = $repoUtilisateur->find($idClient);
+
+        $repoRelation = new RelationNutritionnisteModel();
+        $relation = $repoRelation->findBy(['idClient' => $idClient]);
+        $relation = $relation ? $relation[0] : null;
+
+        $titre = $client ? 'Planning de ' . $client->getNomUtilisateur() : 'Erreur';
+
+        $repoRecette = new RecetteModel();
+        $recettes = $repoRecette->findAll();
+
+        $this->render('planning/index.php', [
+            'client' => $client,
+            'relation' => $relation,
+            'titre' => $titre,
+            'recettes' => $recettes,
+            'controller' => 'NutritionnisteGestionRelation'
         ]);
     }
 

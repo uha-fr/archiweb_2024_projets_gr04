@@ -4,15 +4,20 @@ namespace App\Controllers;
 
 use App\Models\PlanningModel;
 use App\Models\PlanningRecetteModel;
+use App\Models\RecetteModel;
 
 class PlanningController extends Controller
 {
     public function index()
     {
-        $planningModel = new PlanningModel();
-        $recettes = $planningModel->findAll("recette");
+        $repoRecette = new RecetteModel();
+        $recettes = $repoRecette->findAll();
 
-        $this->render('planning/index.php', ['recettes' => $recettes]);
+        $this->render('planning/index.php', [
+            'recettes' => $recettes,
+            'titre' => 'Mon planning',
+            'controller' => 'Planning',
+        ]);
     }
 
     /**
@@ -23,13 +28,17 @@ class PlanningController extends Controller
     public function addRecette()
     {
         $this->verifUtilisateurConnecte();
+        $idUser = $this->getUserIdCo();
 
         $jsonData = file_get_contents('php://input');
 
         $data = json_decode($jsonData, true);
-
+        
         if ($data !== null) {
-            $idUser = $this->getUserIdCo(); // Id de l'utilisateur connecté
+            if(isset($data['idClient'])) {
+                $idUser = $data['idClient'];
+            }
+            
 
             $repoPlanning = new PlanningModel();
             $planningUser = $repoPlanning->findBy(['id_user' => $idUser]);
@@ -60,6 +69,14 @@ class PlanningController extends Controller
         $idUser = $this->getUserIdCo();
 
         $repoPlanning = new PlanningModel();
+
+        $jsonData = file_get_contents('php://input');
+
+        $data = json_decode($jsonData, true);
+        if ($data !== null && $data != "mine") {
+            $idUser = $data;
+        }
+
 
         $planningUser = $repoPlanning->findBy(['id_user' => $idUser]);
 

@@ -9,14 +9,12 @@
             <thead>
                 <th>Nom d'utilisateur</th>
                 <th></th>
-                <th></th>
             </thead>
             <tbody>
                 <?php foreach ($relations as $index => $relation) : ?>
                     <tr>
                         <td><?= $relation->nom_utilisateur ?></td>
-                        <td><a href="" class="btn border text-decoration-none">Voir le planning</a></td>
-                        <td><a href="" class="btn border text-decoration-none">Proposer un planning</a></td>
+                        <td><a href="/nutritionnisteGestionRelation/voirPlanning/<?= $relation->id ?>" class="btn border text-decoration-none">Voir le planning</a></td>
                     </tr>
                 <?php endforeach ?>
             </tbody>
