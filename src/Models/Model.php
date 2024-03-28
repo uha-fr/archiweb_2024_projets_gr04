@@ -175,8 +175,9 @@ class Model extends Database {
      * @param integer $id Identifiant du champs à supprimer
      * @return void
      */
-    public function delete(int $id)
-    {
+    public function delete($id)
+    {   
+        var_dump('DELETE FROM {$this->table} WHERE id = ?');
         return $this->executeQuery("DELETE FROM {$this->table} WHERE id = ?", [$id]);
     }
 
