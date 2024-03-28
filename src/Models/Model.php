@@ -83,7 +83,7 @@ class Model extends Database {
      * @param array $criteres Critères dans la clause WHERE
      * @return object
      */
-    public function findByLimitsGeneral(int $premierItem, int $nbItem, array $criteres = []) {
+    public function findByLimitsGeneral(int $premierItem, int $nbItem, array $criteres = [], $orderBy = "") {
         if(!empty($criteres)) {
             $champs = [];
             $valeurs = [];
@@ -94,9 +94,9 @@ class Model extends Database {
             }
 
             $listChamps = implode(' AND ', $champs);
-            $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE ' . $listChamps . ' LIMIT ' . $premierItem . ', ' . $nbItem, $valeurs);
+            $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE ' . $listChamps . ' ORDER BY ' . $orderBy . ' LIMIT ' . $premierItem . ', ' . $nbItem, $valeurs);
         }else{
-            $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' LIMIT ' . $premierItem . ', ' . $nbItem);
+            $query = $this->executeQuery('SELECT * FROM ' . $this->table  . ' ORDER BY ' . $orderBy . ' LIMIT ' . $premierItem . ', ' . $nbItem);
         }
         return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
     }

@@ -26,7 +26,7 @@ class AlimentController extends Controller {
         }
 
         $premierItem = $pageActuelle * $alimentsParPage - $alimentsParPage;
-        $aliments = $alimentModel->findByLimits($premierItem, $alimentsParPage);
+        $aliments = $alimentModel->findByLimitsGeneral($premierItem, $alimentsParPage, [], "nom");
 
         return $this->render('aliment/index.php', [
             'aliments' => $aliments,
