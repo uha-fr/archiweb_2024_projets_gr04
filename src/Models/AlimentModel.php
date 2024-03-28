@@ -6,6 +6,7 @@ class AlimentModel extends Model {
 
     protected $id;
     protected $nom;
+    protected $kcal;
 
     public function __construct() {
         $this->table = 'aliment';
@@ -18,11 +19,6 @@ class AlimentModel extends Model {
 
     public function countAllAliments() {
         return $this->executeQuery('SELECT count(aliment.id) AS nbAliment FROM ' . $this->table)->fetch();
-    }
-
-    public function findByLimits(int $premierItem, int $nbItem) {
-        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' ORDER BY nom LIMIT ' . $premierItem . ', ' . $nbItem);
-        return $query->fetchAll();
     }
 
     /**
@@ -61,6 +57,26 @@ class AlimentModel extends Model {
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of kcal
+     */ 
+    public function getKcal()
+    {
+        return $this->kcal;
+    }
+
+    /**
+     * Set the value of kcal
+     *
+     * @return  self
+     */ 
+    public function setKcal($kcal)
+    {
+        $this->kcal = $kcal;
 
         return $this;
     }
