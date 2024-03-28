@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\PlanningModel;
 use App\Models\PlanningRecetteModel;
 use App\Models\RecetteModel;
+use App\Models\RelationNutritionnisteModel;
 
 class PlanningController extends Controller
 {
@@ -13,9 +14,13 @@ class PlanningController extends Controller
         $repoRecette = new RecetteModel();
         $recettes = $repoRecette->findAll();
 
+        $repoRelation = new RelationNutritionnisteModel();
+        $accesAccorde = $repoRelation->findBy(['idClient' => $this->getUserIdCo()]); 
+
         $this->render('planning/index.php', [
             'recettes' => $recettes,
             'titre' => 'Mon planning',
+            'accesAccorde' => $accesAccorde[0]->getNutritionnisteAccesPlanning(),
             'controller' => 'Planning',
         ]);
     }
@@ -77,7 +82,6 @@ class PlanningController extends Controller
             $idUser = $data;
         }
 
-
         $planningUser = $repoPlanning->findBy(['id_user' => $idUser]);
 
         if (empty($planningUser)) {
@@ -101,5 +105,23 @@ class PlanningController extends Controller
 
         header('Content-Type: application/json');
         echo json_encode($recettesArray);
+    }
+
+    public function changerAccesPlanning() {
+        $this->verifUtilisateurConnecte();
+
+        $jsonData = file_get_contents('php://input');
+
+        $data = json_decode($jsonData, true);
+        if ($data !== null) {
+            $repoRelation = new RelationNutritionnisteModel();
+            $relation = $repoRelation->findBy(['idClient' => $this->getUserIdCo()]);
+
+            if(!empty($relation)) {
+                $data['acces'] == "true" ? $relation[0]->setNutritionnisteAccesPlanning(0) : $relation[0]->setNutritionnisteAccesPlanning(1);
+                $relation[0]->update();
+            }
+            echo 200;
+        }
     }
 }

@@ -56,6 +56,13 @@
     <?php if(isset($relation) && $relation->getNutritionnisteAccesPlanning() == 1): ?>
         <p><?= $client->getNomUtilisateur() ?> vous a donné l'accès à l'édition de son planning</p>
     <?php endif ?>
+    <?php if($controller == "Planning"): ?>
+        <?php if($accesAccorde == "0"): ?>
+            <button id="acces=false" class="mx-2" onclick="accorderAcces(this)" ">Accorder l'accès à mon nutritionniste</button>
+        <?php else: ?>
+            <button id="acces=true" class="mx-2" onclick="accorderAcces(this)" ">Retirer l'accès à mon nutritionniste</button>
+        <?php endif ?>
+    <?php endif ?>
 
     <div id="calendar"></div>
 
@@ -213,5 +220,28 @@ if (!isset($events)) {
         } else {
             descriptionDiv.style.display = 'none';
         }
+    }
+
+    function accorderAcces(node) {
+        let acces = "false";
+        if(node.id == "acces=true") {
+            acces = "true";
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Planning/changerAccesPlanning',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({acces: acces}),
+            success: function(data) {
+                if(node.id == "acces=true") {
+                    node.innerText = "Accorder l'accès à mon nutritionniste";
+                    node.id = "acces=false";
+                }else{
+                    node.innerText = "Retirer l'accès à mon nutritionniste";
+                    node.id = "acces=true";
+                }
+            },
+        });
     }
 </script>
