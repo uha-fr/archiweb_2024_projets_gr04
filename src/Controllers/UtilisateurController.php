@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Form;
+use App\Models\PlanningModel;
 use App\Models\UtilisateursModel;
 use DateInterval;
 use DateTime;
@@ -104,7 +105,6 @@ class UtilisateurController extends Controller
             ]);
 
             if (!empty($result)) {
-                // var_dump($result);
                 if ($result[0]->getMdp() == $password) {
                     $_SESSION['utilisateur'] = [
                         'id' => $result[0]->getId(),
@@ -223,9 +223,23 @@ class UtilisateurController extends Controller
                     $this->saveErrAndRedirectToSignIn('Nom d\'utilisateur déjà utilisé !');
 
                 // Ajout de l'utilisateur à la base avec le role 'utilisateur' par défaut
-                $success = $utilisateursModel->addUser($username, $hashed_password, $email, 'utilisateur');
+                $newIdUser = uniqid();
+                $newUser = new UtilisateursModel();
+                $newUser->setId($newIdUser)
+                        ->setNomUtilisateur($username)
+                        ->setMdp($hashed_password)
+                        ->setEmail($email)
+                        ->setRole('utilisateur');
+                $newUser->create();
 
-                if ($success) {
+                //Création planning vide
+                $repoPlanning = new PlanningModel();
+                $idPlanningUser = uniqid();
+                $repoPlanning->setId($idPlanningUser)
+                    ->setId_user($newIdUser);
+                $repoPlanning->create();
+
+                if (true) {
                     echo 'Utilisateur ajouté avec succès.';
                 } else {
                     echo 'Erreur lors de l\'ajout de l\'utilisateur.';
@@ -354,7 +368,6 @@ class UtilisateurController extends Controller
             </html>
         ';
         $mail->AddAddress($result[0]->email);
-        // die($result[0]->email);
 
         if(!$mail->Send()) {
             echo 'Erreur lors de l\'envoi de l\'e-mail.';

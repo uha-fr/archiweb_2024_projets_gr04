@@ -20,10 +20,10 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <?php if(isset($_SESSION['utilisateur'])): ?>
-                        <li class="nav-item"><a class="nav-link" href="/aliment">Aliment</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/recette">Recette</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/planning">Planning</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/rechercheNutritionniste">Nutritionnistes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= WEBROOT ?>/aliment">Aliment</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= WEBROOT ?>/recette">Recette</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= WEBROOT ?>/planning">Planning</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<?= WEBROOT ?>/rechercheNutritionniste">Nutritionnistes</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <?= $_SESSION['utilisateur']['nom_utilisateur'] ?>
@@ -39,17 +39,18 @@
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <?php if($_SESSION['utilisateur']['role'] == "admin"): ?>
-                                    <li><a class="dropdown-item" href="/admin">Administration</a></li>
+                                    <li><a class="dropdown-item" href="<?= WEBROOT ?>/admin">Administration</a></li>
                                 <?php endif ?>
                                 <?php if($_SESSION['utilisateur']['role'] == "nutritionniste"): ?>
-                                    <li><a class="dropdown-item" href="/nutritionnisteGestionRelation">Gestion des relations</a></li>
+                                    <li><a class="dropdown-item" href="<?= WEBROOT ?>/nutritionnisteGestionRelation">Gestion des relations</a></li>
                                 <?php endif ?>
-                                <li><a class="dropdown-item" href="/utilisateur/settings">Paramètres</a></li>
-                                <li><a class="dropdown-item" href="/utilisateur/logout">Déconnexion</a></li>
+                                <li><a class="dropdown-item" href="<?= WEBROOT ?>/suiviConsommation">Suivi consommation</a></li>
+                                <li><a class="dropdown-item" href="<?= WEBROOT ?>/utilisateur/settings">Paramètres</a></li>
+                                <li><a class="dropdown-item" href="<?= WEBROOT ?>/utilisateur/logout">Déconnexion</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
-                        <li class="nav-item sign-in-up"><a class="nav-link" href="/utilisateur/login">Connexion</a></li>
+                        <li class="nav-item sign-in-up"><a class="nav-link" href="<?= WEBROOT ?>/utilisateur/login">Connexion</a></li>
                     <?php endif ?>
 
                 </ul>

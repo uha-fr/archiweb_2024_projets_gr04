@@ -16,11 +16,16 @@ class PlanningController extends Controller
 
         $repoRelation = new RelationNutritionnisteModel();
         $accesAccorde = $repoRelation->findBy(['idClient' => $this->getUserIdCo()]); 
+        if(!empty($accesAccorde)) {
+            $accesAccorde[0]->getNutritionnisteAccesPlanning();
+        }else{
+            $accesAccorde = "pasDeNutritionniste";
+        }
 
         $this->render('planning/index.php', [
             'recettes' => $recettes,
             'titre' => 'Mon planning',
-            'accesAccorde' => $accesAccorde[0]->getNutritionnisteAccesPlanning(),
+            'accesAccorde' => $accesAccorde,
             'controller' => 'Planning',
         ]);
     }
@@ -49,10 +54,7 @@ class PlanningController extends Controller
             $planningUser = $repoPlanning->findBy(['id_user' => $idUser]);
 
             if ($planningUser == null) {
-                $idPlanningUser = uniqid();
-                $repoPlanning->setId($idPlanningUser)
-                    ->setId_user($idUser);
-                $repoPlanning->create();
+                
             } else {
                 $idPlanningUser = $planningUser[0]->getId();
             }

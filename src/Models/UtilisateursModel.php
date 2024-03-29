@@ -47,22 +47,7 @@ class UtilisateursModel extends Model {
         return $this->executeQuery($query, [$userId])->fetchAll();
     }
 
-    /**
-     * Ajoute un nouvel utilisateur à la base de données.
-     *
-     * @param string $nom_utilisateur
-     * @param string $mdp
-     * @param string $email
-     * @param string $role
-     * @return bool Renvoie true si l'ajout a réussi, false sinon.
-     */
-    public function addUser(string $nom_utilisateur, string $mdp, string $email, string $role): bool
-    {
-        $query = 'INSERT INTO ' . $this->table . ' (nom_utilisateur, mdp, email, role) VALUES (?, ?, ?, ?)';
-        $result = $this->executeQuery($query, [$nom_utilisateur, $mdp, $email, $role]);
-
-        return $result !== false;
-    }
+    
 
     /**
      * Met à jour le mail d'un utilisateur.

@@ -53,10 +53,12 @@
     <?php if(isset($client)): ?>
         <h3><?= $titre ?></h3>
     <?php endif ?>
+
     <?php if(isset($relation) && $relation->getNutritionnisteAccesPlanning() == 1): ?>
         <p><?= $client->getNomUtilisateur() ?> vous a donné l'accès à l'édition de son planning</p>
     <?php endif ?>
-    <?php if($controller == "Planning"): ?>
+
+    <?php if($controller == "Planning" && $accesAccorde === true || $accesAccorde === false): ?>
         <?php if($accesAccorde == "0"): ?>
             <button id="acces=false" class="mx-2" onclick="accorderAcces(this)" ">Accorder l'accès à mon nutritionniste</button>
         <?php else: ?>
