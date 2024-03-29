@@ -12,6 +12,19 @@ class RecetteAlimentModel extends Model {
         $this->table = 'recettealiment';
     }
 
+    public function findDetailsAlimentByRecetteIdArray(array $recettesIds) {
+        $champs = '(';
+        foreach($recettesIds as $id) {
+            $champs .= '?, ';
+        }
+        $champs = rtrim($champs, ', ') . ')';
+        $query = 'SELECT * 
+                    FROM recettealiment
+                    JOIN aliment ON recettealiment.id_aliment = aliment.id
+                    WHERE recettealiment.id_recette IN ' . $champs;
+        return $this->executeQuery($query, $recettesIds)->fetchAll();
+    }
+
     /**
      * Get the value of id_recette
      */ 

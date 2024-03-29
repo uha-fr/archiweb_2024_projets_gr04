@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use PDO;
+
 class PlanningRecetteModel extends Model {
 
     protected $id;
@@ -21,6 +23,25 @@ class PlanningRecetteModel extends Model {
                     JOIN recette on planningrecette.idRecette = recette.id
                     WHERE idPlanning = \'' . $planningId . '\'';
         return $this->executeQuery($query)->fetchAll();
+    }
+
+    public function findByDay($idPlanning, string $date) {
+        
+        $query = 'SELECT idRecette
+            FROM planningrecette
+            WHERE idPlanning = \'' . $idPlanning . '\'
+            AND \'' . $date . '\' BETWEEN dateDebut AND dateFin;';
+
+        return $this->executeQuery($query)->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function findByMonth($idPlanning, string $date) {
+        $query = 'SELECT idRecette
+            FROM planningrecette
+            WHERE idPlanning = \'' . $idPlanning . '\'
+            AND MONTH(dateDebut) = ' . $date;
+
+        return $this->executeQuery($query)->fetchAll(PDO::FETCH_COLUMN);
     }
 
     /**

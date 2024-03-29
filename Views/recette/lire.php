@@ -6,7 +6,8 @@
     <h4>Ingrédients</h4>
     <ul>
         <?php foreach ($ingredients as $ingredient) : ?>
-            <li><?= $ingredient->nom ?></li>
+            <li><?= $ingredient->getNom() ?> - <?= $ingredient->quantite ?><?= $ingredient->unite ?></li>
         <?php endforeach ?>
     </ul>
+    <p>Total calories : <?= $totalCalorie ?> Kcal</p>
 </main>

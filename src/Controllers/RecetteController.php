@@ -100,9 +100,22 @@ class RecetteController extends Controller {
 
         $alimentModel = new AlimentModel();
         $ingredients = $alimentModel->findAlimentsByRecetteId($id);
+
+        $totalCalorie = 0;
+        foreach($ingredients as $ingredient) {
+            if($ingredient->unite == 'kg' || $ingredient->unite == 'L') {
+                $totalCalorie += $ingredient->quantite * 10 * $ingredient->getKcal();
+            }else {
+                if($ingredient->unite == 'g') {
+                    $totalCalorie += $ingredient->quantite / 100 * $ingredient->getKcal(); 
+                }
+            }
+        }
+        
         $this->render('recette/lire.php', [
             'recette' => $recette,
             'ingredients' => $ingredients,
+            'totalCalorie' => $totalCalorie,
             'retour' => $retourBouton->create(),
         ]);
     }

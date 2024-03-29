@@ -177,7 +177,6 @@ class Model extends Database {
      */
     public function delete($id)
     {   
-        var_dump('DELETE FROM {$this->table} WHERE id = ?');
         return $this->executeQuery("DELETE FROM {$this->table} WHERE id = ?", [$id]);
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use PDO;
+
 class AlimentModel extends Model {
 
     protected $id;
@@ -13,8 +15,8 @@ class AlimentModel extends Model {
     }
 
     public function findAlimentsByRecetteId($id) {
-        $query = $this->executeQuery('SELECT aliment.id, aliment.nom FROM recettealiment JOIN aliment ON recettealiment.id_aliment = aliment.id WHERE recettealiment.id_recette = \'' . $id . '\'');
-        return $query->fetchAll();
+        $query = $this->executeQuery('SELECT aliment.id, aliment.nom, aliment.kcal, quantite, unite FROM recettealiment JOIN aliment ON recettealiment.id_aliment = aliment.id WHERE recettealiment.id_recette = \'' . $id . '\'');
+        return $query->fetchAll(PDO::FETCH_CLASS, 'App\Models\\' . $this->table . 'Model');
     }
 
     public function countAllAliments() {
