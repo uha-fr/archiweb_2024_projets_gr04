@@ -6,20 +6,81 @@ use App\Models\PlanningModel;
 use App\Models\PlanningRecetteModel;
 use App\Models\RecetteModel;
 use App\Models\RelationNutritionnisteModel;
+use App\Core\Form;
+use App\Models\RecetteAlimentModel;
 
 class PlanningController extends Controller
 {
     public function index()
     {
+        $this->verifUtilisateurConnecte();
+
         $repoRecette = new RecetteModel();
         $recettes = $repoRecette->findAll();
 
         $repoRelation = new RelationNutritionnisteModel();
         $accesAccorde = $repoRelation->findBy(['idClient' => $this->getUserIdCo()]); 
         if(!empty($accesAccorde)) {
-            $accesAccorde[0]->getNutritionnisteAccesPlanning();
+            $accesAccorde = $accesAccorde[0]->getNutritionnisteAccesPlanning();
         }else{
             $accesAccorde = "pasDeNutritionniste";
+        }
+
+        $optionsMois = [
+            '01' => 'Janvier',
+            '02' => 'Février',
+            '03' => 'Mars',
+            '04' => 'Avril',
+            '05' => 'Mai',
+            '06' => 'Juin',
+            '07' => 'Juillet',
+            '08' => 'Août',
+            '09' => 'Septembre',
+            '10' => 'Octobre',
+            '11' => 'Novembre',
+            '12' => 'Décembre'
+        ];
+
+        $form = new Form;
+        $form->debutForm()
+                ->ajoutSelect('listeMois', $optionsMois)
+                ->ajoutBouton('Créer', ['type' => 'submit'])
+                ->finForm();
+
+        $ingredientsDetails = [];
+        $afficherListe = false;
+
+        if(isset($_POST['listeMois']) && !empty($_POST['listeMois'])) {
+            $afficherListe = true;
+            $repoPlanning = new PlanningModel();
+            $idPlanningUser = $repoPlanning->findBy(['id_user' => $this->getUserIdCo()]);
+            $repoPlanningRecette = new PlanningRecetteModel();
+            $idAliments = $repoPlanningRecette->findByMonth($idPlanningUser[0]->getId(), $this->secure($_POST['listeMois']));
+            
+            if(!empty($idAliments)) {
+                $repoRecetteAliment = new RecetteAlimentModel();
+                $ingredientsDetails = $repoRecetteAliment->findDetailsAlimentByRecetteIdArray($idAliments);
+            }
+
+            setcookie('liste', json_encode($ingredientsDetails), time() + 3600, '/');
+        }
+        
+        if(isset($_POST['telechargerRecette'])) {
+            $nomFichier = 'export.txt';
+            header('Content-Type: text/plain');
+            header('Content-Disposition: attachment; filename="' . $nomFichier . '"');
+
+            if(isset($_COOKIE['liste'])) {
+                $ingredients = json_decode($_COOKIE['liste']);
+
+                foreach($ingredients as $ingredient) {
+                    echo $ingredient->nom . " " . $ingredient->quantite . $ingredient->unite;
+                    echo "\n";
+                }
+            }else{
+                echo "Liste vide";
+            }
+            exit();
         }
 
         $this->render('planning/index.php', [
@@ -27,6 +88,9 @@ class PlanningController extends Controller
             'titre' => 'Mon planning',
             'accesAccorde' => $accesAccorde,
             'controller' => 'Planning',
+            'form' => $form->create(),
+            'ingredientsDetailsListe' => $ingredientsDetails,
+            'afficherListe' => $afficherListe,
         ]);
     }
 
