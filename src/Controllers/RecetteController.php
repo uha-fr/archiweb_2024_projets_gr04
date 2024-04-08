@@ -83,6 +83,7 @@ class RecetteController extends Controller {
             'pageActuelle' => $pageActuelle,
             'nbPage' => $nbPage,
             'btnEffacerFiltres' => $btnEffacerFiltres->create(),
+            'frigoType' => 'index',
         ]);
     }
 
@@ -123,7 +124,7 @@ class RecetteController extends Controller {
 
     public function ajoutermodifier($idRecette = null) {
         $this->verifUtilisateurConnecte();
-
+        
         $recetteModel = new RecetteModel();
         $recetteAlimentModel = new RecetteAlimentModel();
 
@@ -209,6 +210,7 @@ class RecetteController extends Controller {
             'formAliments' => $formAliments->create(),
             'erreurs' => $erreurs,
             'isModification' => $isModification,
+            'frigoType' => 'creationModification',
         ]);
     }
 

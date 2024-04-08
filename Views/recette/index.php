@@ -68,5 +68,9 @@
     </div>
 </main>
 
-
+<script type="text/javascript">
+    <?php if(isset($frigoType)): ?>
+        var frigoType = <?php echo json_encode($frigoType) ?>
+    <?php endif ?>
+</script>
 <script src="public/js/rechercheAliment.js" type="text/javascript"></script>

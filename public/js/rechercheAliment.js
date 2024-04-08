@@ -66,15 +66,16 @@ document.addEventListener('DOMContentLoaded', function () {
             frigo.push(alimentTrouve);
 
             //Ajout dans localStorage
-            let frigoItems = localStorage.getItem('frigo');
-            if (frigoItems != null) {
-                frigoItems = JSON.parse(frigoItems);
-            } else {
-                frigoItems = [];
+            if(frigoType !== 'creationModification') {
+                let frigoItems = localStorage.getItem('frigo');
+                if (frigoItems != null) {
+                    frigoItems = JSON.parse(frigoItems);
+                } else {
+                    frigoItems = [];
+                }
+                frigoItems.push(alimentTrouve);
+                localStorage.setItem('frigo', JSON.stringify(frigoItems));
             }
-            frigoItems.push(alimentTrouve);
-            localStorage.setItem('frigo', JSON.stringify(frigoItems));
-
         }
     });
 
@@ -88,31 +89,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     //localStorage to frigo
-    let localFrigo = localStorage.getItem('frigo');
-    if (localFrigo != null) {
-        localFrigo = JSON.parse(localFrigo);
-        for (let item of localFrigo) {
-            let liElement = $('<li>').attr({
-                id: item.id,
-            }).text(item.nom);
+    if(frigoType !== 'creationModification') {
+        let localFrigo = localStorage.getItem('frigo');
+        if (localFrigo != null) {
+            localFrigo = JSON.parse(localFrigo);
+            for (let item of localFrigo) {
+                let liElement = $('<li>').attr({
+                    id: item.id,
+                }).text(item.nom);
 
-            let aElement = $('<a>').attr({
-                href: '#',
-                class: 'aliment-frigo-cross',
-                onclick: 'supprimerAlimentFrigo(this)'
-            }).text('x');
+                let aElement = $('<a>').attr({
+                    href: '#',
+                    class: 'aliment-frigo-cross',
+                    onclick: 'supprimerAlimentFrigo(this)'
+                }).text('x');
 
-            liElement.append(aElement);
-            $('#monFrigo').append(liElement);
+                liElement.append(aElement);
+                $('#monFrigo').append(liElement);
 
-            frigo.push(item);
+                frigo.push(item);
 
-            //Ajout input
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'aliments[]',
-                value: item.id,
-            }).appendTo('#formFindRecette');
+                //Ajout input
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'aliments[]',
+                    value: item.id,
+                }).appendTo('#formFindRecette');
+            }
         }
     }
 });

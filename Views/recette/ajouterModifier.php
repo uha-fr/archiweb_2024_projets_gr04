@@ -24,11 +24,11 @@
 
 </main>
 
-<script src="/public/js/rechercheAliment.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-    localStorage.removeItem('frigo');
-    try {
-        localStorage.setItem('frigo', JSON.stringify(ingredientsEdit)); // ingredientsEdit provient du serveur
-    } catch(e){}
+    <?php if(isset($frigoType)): ?>
+        var frigoType = <?php echo json_encode($frigoType) ?>
+    <?php endif ?>
 </script>
+
+<script src="/public/js/rechercheAliment.js" type="text/javascript"></script>
