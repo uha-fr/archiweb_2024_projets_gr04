@@ -55,6 +55,7 @@ class RecetteController extends Controller {
                 $pageActuelle = $nbPage;
             }
             $premierItem = $pageActuelle * $recettesParPage - $recettesParPage;
+            if($premierItem < 0) $premierItem = 0;
             $recettes = $recetteModel->findByLimits($premierItem, $recettesParPage);
         }
 

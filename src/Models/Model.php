@@ -83,7 +83,8 @@ class Model extends Database {
      * @param array $criteres Critères dans la clause WHERE
      * @return object
      */
-    public function findByLimitsGeneral(int $premierItem, int $nbItem, array $criteres = [], $orderBy = "") {
+    public function findByLimitsGeneral(int $premierItem, int $nbItem, array $criteres = [], $orderBy = "id") {
+        if($premierItem < 0) $premierItem = 0;
         if(!empty($criteres)) {
             $champs = [];
             $valeurs = [];

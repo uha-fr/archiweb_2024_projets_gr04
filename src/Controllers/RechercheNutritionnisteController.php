@@ -29,6 +29,7 @@ class RechercheNutritionnisteController extends Controller
         }
 
         $premierItem = $pageActuelle * $itemsParPage - $itemsParPage;
+        if($premierItem < 0) $premierItem = 0;
         $items = $repo->findByLimitesNutritionnistesDetails($premierItem, $itemsParPage, $this->getUserIdCo());
 
         $repo = new RelationNutritionnisteModel();

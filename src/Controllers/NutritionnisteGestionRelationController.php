@@ -28,6 +28,7 @@ class NutritionnisteGestionRelationController extends Controller {
             $pageActuelle = 1;
         }
         $premierItem = $pageActuelle * $itemsParPage - $itemsParPage;
+        if($premierItem < 0) $premierItem = 0;
         $items = $repo->findByLimitesUtilisateursRelationNutritionnisteDetails($premierItem, $itemsParPage, $this->getUserIdCo());
 
         /* Notifications demande de relations */
