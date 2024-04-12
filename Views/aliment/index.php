@@ -18,7 +18,7 @@
             </tbody>
         </table>
         <nav>
-            <ul class="pagination">
+            <ul class="pagination justify-content-center flex-wrap">
                 <li class="page-item <?= ($pageActuelle == 1) ? "disabled" : "" ?>">
                     <a href="?page=<?= $pageActuelle - 1 ?>" class="page-link">Page précédente</a>
                 </li>

@@ -2,8 +2,8 @@
     <title>Vos relations</title>
 </head>
 
-<main class="px-4 d-flex">
-    <section class="col-9">
+<main class="row px-4 d-flex">
+    <section class="col-md-12 col-lg-6">
         <h3>Vos relations</h3>
         <table class="table">
             <thead>
@@ -20,7 +20,7 @@
             </tbody>
         </table>
         <nav>
-            <ul class="pagination">
+            <ul class="pagination justify-content-center flex-wrap">
                 <li class="page-item <?= ($pageActuelle == 1) ? "disabled" : "" ?>">
                     <a href="?page=<?= $pageActuelle - 1 ?>" class="page-link">Page précédente</a>
                 </li>
@@ -37,7 +37,7 @@
         </nav>
     </section>
 
-    <section class="">
+    <section class="col-md-12 col-lg-6">
         <h3>Vos demandes de relation</h3>
         <ul class="list-unstyled">
             <?php foreach ($notificationsDemande as $index => $notificationDemande) : ?>

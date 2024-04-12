@@ -20,7 +20,7 @@
         <header class="masthead text-center text-white">
             <div class="masthead-content">
                 <div class="container px-5">
-                    <img src="/public/images/logo.png" alt="Logo complet de MANGER" style="scale: 0.80">
+                    <img class="responsive-image" src="/public/images/logo.png" alt="Logo complet de MANGER">
                     <h1 class="masthead-heading mb-0">Une Application pour</h1>
                     <h2 class="masthead-subheading mb-0">Manger, planifier, préparer des recettes...</h2>
                     <a class="btn btn-primary btn-xl rounded-pill mt-5" href="#scroll">Démarrer</a>

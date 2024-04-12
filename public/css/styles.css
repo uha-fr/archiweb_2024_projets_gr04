@@ -10925,3 +10925,10 @@ header.masthead .bg-circle-4 {
 main {
   padding-top: 10px;
 }
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
+}

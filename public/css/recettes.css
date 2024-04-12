@@ -3,19 +3,8 @@ main {
     padding: 0 30px;
 }
 
-/* Liste des recettes */
-.recettes-list {
-    width: 60%;
-}
-
 .ligne-recette {
     cursor: pointer;
-}
-
-/* Frigo */
-.frigo {
-    width: 40%;
-    margin-left: 100px;
 }
 
 #resultatsAliments { /* ul */
