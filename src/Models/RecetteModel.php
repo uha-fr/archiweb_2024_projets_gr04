@@ -32,11 +32,11 @@ class RecetteModel extends Model {
     }
 
     public function countAllRecettes() {
-        return $this->executeQuery('SELECT count(recette.id) AS nbRecette FROM ' . $this->table . ' WHERE id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'])->fetch();
+        return $this->executeQuery('SELECT count(recette.id) AS nbRecette FROM ' . $this->table . ' WHERE id_utilisateur = -1 OR id_utilisateur = \'' . $_SESSION['utilisateur']['id'] . '\'')->fetch();
     }
 
     public function findByLimits(int $premierItem, int $nbItem) {
-        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id_utilisateur = -1 OR id_utilisateur = ' . $_SESSION['utilisateur']['id'] . ' ORDER BY nom LIMIT ' . $premierItem . ', ' . $nbItem);
+        $query = $this->executeQuery('SELECT * FROM ' . $this->table . ' WHERE id_utilisateur = -1 OR id_utilisateur = \'' . $_SESSION['utilisateur']['id'] . '\' ORDER BY nom LIMIT ' . $premierItem . ', ' . $nbItem);
         return $query->fetchAll();
     }
 

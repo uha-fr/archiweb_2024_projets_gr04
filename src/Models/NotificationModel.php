@@ -18,7 +18,7 @@ class NotificationModel extends Model {
         $query = 'SELECT notification.id AS idNotification, idUserOrigine, date, nom_utilisateur
                     FROM notification
                     LEFT JOIN utilisateurs ON notification.idUserOrigine = utilisateurs.id
-                    WHERE idUserDest = ' . $idUserDest .'
+                    WHERE idUserDest = \'' . $idUserDest .'\'
                     AND type = "demande-nutritionniste"
                     ORDER BY date';
         return $this->executeQuery($query)->fetchAll();

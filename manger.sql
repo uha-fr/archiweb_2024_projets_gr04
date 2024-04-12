@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 02 avr. 2024 à 12:13
+-- Généré le : ven. 12 avr. 2024 à 15:52
 -- Version du serveur : 8.0.31
 -- Version de PHP : 7.3.12
 
@@ -771,14 +771,6 @@ CREATE TABLE IF NOT EXISTS `favori` (
   KEY `idUtilisateur` (`idUtilisateur`)
 ) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `favori`
---
-
-INSERT INTO `favori` (`id`, `idUtilisateur`, `type`, `idFavori`) VALUES
-('65f376193234b', 1, 'recette', '7'),
-('65f37612200ca', 1, 'recette', '65eb28751f25c');
-
 -- --------------------------------------------------------
 
 --
@@ -789,8 +781,8 @@ DROP TABLE IF EXISTS `notification`;
 CREATE TABLE IF NOT EXISTS `notification` (
   `id` varchar(13) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
-  `idUserOrigine` int DEFAULT NULL,
-  `idUserDest` int DEFAULT NULL,
+  `idUserOrigine` varchar(13) DEFAULT NULL,
+  `idUserDest` varchar(13) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_idUserOrigine` (`idUserOrigine`),
@@ -816,13 +808,23 @@ CREATE TABLE IF NOT EXISTS `planning` (
 --
 
 INSERT INTO `planning` (`id`, `id_user`, `date`) VALUES
-('65f6bf11b0168', 1, '0000-00-00'),
-('65fb517593c2e', 12, '0000-00-00'),
-('6606b85e1df51', -1, '0000-00-00'),
-('6606b90ac3c78', -1, '0000-00-00'),
-('6606ba1ddd39e', 6606, '0000-00-00'),
-('660bf5e53e8d7', 660, '0000-00-00'),
-('660bf5ef6ff4c', 660, '0000-00-00');
+('SEDRFTGYHUJ', 9, '0000-00-00'),
+('IU65REDFGH', 8, '0000-00-00'),
+('OIUY6T5REDFG', 7, '0000-00-00'),
+('9876TGHJI', 6, '0000-00-00'),
+('987YGBHYTRF', 3, '0000-00-00'),
+('FEZFEZFZGV', 5, '0000-00-00'),
+('FEYGZOFF', 4, '0000-00-00'),
+('8UJHY6TGFR4ED', 1, '0000-00-00'),
+('EDRFTGYHUJI', 10, '0000-00-00'),
+('0987TGSA', 11, '0000-00-00'),
+('PJHYGYBUNI', 12, '0000-00-00'),
+('KJHBGVSZA', 13, '0000-00-00'),
+('POKIJHUYGTFS', 14, '0000-00-00'),
+('OIJHUYG7TF6YS', 15, '0000-00-00'),
+('POKIJHGTFV', 6606, '0000-00-00'),
+('66192fa122ce1', 66192, '0000-00-00'),
+('6619484b8f971', 6619484, '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -840,16 +842,17 @@ CREATE TABLE IF NOT EXISTS `planningrecette` (
   PRIMARY KEY (`id`),
   KEY `idPlanning` (`idPlanning`),
   KEY `idRecette` (`idRecette`)
-) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `planningrecette`
 --
 
 INSERT INTO `planningrecette` (`id`, `idPlanning`, `idRecette`, `dateDebut`, `dateFin`) VALUES
-(56, '6606ba1ddd39e', '660539edf02d9', '2024-03-29', '2024-04-05'),
-(55, '65f6bf11b0168', '66068ec0bc92d', '2024-03-21', '2024-03-21'),
-(54, '65f6bf11b0168', '660539edf02d9', '2024-03-21', '2024-03-29');
+(64, '66192fa122ce1', '66142900c00df', '2024-04-12', '2024-04-12'),
+(63, '6619484b8f971', '66142977b1db9', '2024-04-18', '2024-04-18'),
+(62, '6619484b8f971', '661428b53eaa6', '2024-04-15', '2024-04-16'),
+(61, '6619484b8f971', '66142900c00df', '2024-04-12', '2024-04-12');
 
 -- --------------------------------------------------------
 
@@ -872,20 +875,11 @@ CREATE TABLE IF NOT EXISTS `recette` (
 --
 
 INSERT INTO `recette` (`id`, `nom`, `description`, `id_utilisateur`) VALUES
-('1', 'Galette des rois', 'Une bonne galette à la frangipane', -1),
-('2', 'Soupe de poireaux', 'La bonne soupe miam', -1),
-('3', 'Bouillabaisse', 'Un riche ragoût de poisson provençal, la bouillabaisse combine divers poissons et fruits de mer dans un bouillon parfumé au safran. Servie traditionnellement avec une rouille, une sauce à l\'ail et au piment, elle est un pilier de la cuisine méditerranéenne.', -1),
-('4', 'Coq au Vin', 'Un classique de la cuisine française, le coq au vin est un plat mijoté où le poulet est cuit lentement dans du vin rouge avec des lardons, des champignons et des oignons, créant ainsi une sauce riche et profonde.', -1),
-('5', 'Ratatouille', 'Ce plat végétarien originaire de Nice est un mélange coloré d\'aubergines, de courgettes, de poivrons et de tomates, mijoté avec de l\'huile d\'olive et des herbes. Il est souvent servi comme accompagnement ou plat principal.', -1),
-('6', 'Quiche Lorraine', 'Une tarte salée originaire de Lorraine, composée d\'une pâte brisée garnie d\'un appareil à crème et d\'œufs, enrichie de lardons fumés. Elle peut être servie chaude ou froide, idéale pour un repas léger.', -1),
-('7', 'Boeuf Bourguignon', 'Un ragoût de bœuf savoureux, mijoté pendant des heures dans du vin rouge de Bourgogne avec des carottes, des oignons et des champignons. Ce plat est célèbre pour sa profondeur de goût et sa sauce riche.', -1),
-('8', 'Soupe à l\'Oignon', 'Un plat réconfortant, la soupe à l\'oignon est faite de oignons caramélisés lentement cuits dans un bouillon de bœuf, souvent gratinée au four avec des tranches de pain et recouverte de fromage fondu.', -1),
-('10', 'Cassoulet', 'Un riche ragoût de haricots blancs, de saucisses et de viandes variées comme du porc ou du confit de canard. Originaire du sud-ouest de la France, c\'est un plat copieux et réconfortant.', -1),
-('11', 'Salade Niçoise', 'Une salade composée typique de la Côte d\'Azur, elle mélange thon, œufs durs, légumes frais comme des tomates et des haricots verts, avec des olives noires et des anchois, le tout assaisonné d\'une vinaigrette légère.', -1),
-('12', 'Crème Brûlée', 'Un dessert élégant et simple, composé d\'une riche crème custard à la vanille, refroidie et recouverte d\'une couche de sucre caramélisé croquant. La surface caramélisée est souvent brûlée au chalumeau juste avant de servir.', -1),
-('65c62447b64e4', 'test receette', 'ezfefez', 1),
-('66068ec0bc92d', 'Gigot', '', 1),
-('660539edf02d9', 'A', 'aaccc', 1);
+('66142900c00df', 'Asperges blanches, crème à la ciboulette', '', -1),
+('66142977b1db9', 'Taboulé', '', -1),
+('661428b53eaa6', 'Tarte thon, tomate et moutarde', 'Se mange aussi bien chaude que froide. Peut servir de plat unique en été si accompagnée d\'une petite salade verte mélangée (frisée, scarole, lola rossa, laitue, etc...).', -1),
+('6614285c10b88', 'Falafel', 'Servir en accompagnement d\'une quiche ou d\'une tourte. Excellent repas du soir. Vous pouvez utiliser des croûtons déjà prêts. La sauce peut être préparée 6 heures à l\'avance et réservée au frais.', -1),
+('661427f678aee', 'Salade César', 'Servir en accompagnement d\'une quiche ou d\'une tourte. Excellent repas du soir. Vous pouvez utiliser des croûtons déjà prêts. La sauce peut être préparée 6 heures à l\'avance et réservée au frais.', -1);
 
 -- --------------------------------------------------------
 
@@ -908,13 +902,29 @@ CREATE TABLE IF NOT EXISTS `recettealiment` (
 --
 
 INSERT INTO `recettealiment` (`id_recette`, `id_aliment`, `quantite`, `unite`) VALUES
-('660539edf02d9', 46, '10', 'kg'),
-('660539edf02d9', 2, '1', 'g'),
-('660539edf02d9', 40, '1', 'g'),
-('878HN', 0, '9', 'L'),
-('66068ec0bc92d', 123, '230', 'g'),
-('66068ec0bc92d', 583, '1', 'kg'),
-('66068ec0bc92d', 15, '1.2', 'L');
+('661427f678aee', 638, '10', 'g'),
+('661427f678aee', 341, '30', 'g'),
+('661427f678aee', 602, '50', 'g'),
+('661427f678aee', 551, '14', 'g'),
+('661427f678aee', 367, '19', 'g'),
+('661427f678aee', 583, '190', 'g'),
+('6614285c10b88', 390, '17', 'g'),
+('6614285c10b88', 380, '100', 'g'),
+('6614285c10b88', 356, '76', 'g'),
+('661428b53eaa6', 411, '56', 'g'),
+('661428b53eaa6', 609, '45', 'g'),
+('661428b53eaa6', 114, '200', 'g'),
+('661428b53eaa6', 537, '198', 'g'),
+('661428b53eaa6', 638, '10', 'g'),
+('66142900c00df', 316, '100', 'g'),
+('66142900c00df', 525, '100', 'g'),
+('66142900c00df', 430, '100', 'g'),
+('66142900c00df', 522, '15', 'g'),
+('66142977b1db9', 634, '98', 'g'),
+('66142977b1db9', 380, '876', 'g'),
+('66142977b1db9', 411, '156', 'g'),
+('66142977b1db9', 392, '190', 'g'),
+('66142977b1db9', 525, '16', 'g');
 
 -- --------------------------------------------------------
 
@@ -925,8 +935,8 @@ INSERT INTO `recettealiment` (`id_recette`, `id_aliment`, `quantite`, `unite`) V
 DROP TABLE IF EXISTS `relationnutritionniste`;
 CREATE TABLE IF NOT EXISTS `relationnutritionniste` (
   `id` varchar(13) NOT NULL,
-  `idNutritionniste` int DEFAULT NULL,
-  `idClient` int DEFAULT NULL,
+  `idNutritionniste` varchar(13) DEFAULT NULL,
+  `idClient` varchar(13) DEFAULT NULL,
   `nutritionnisteAccesPlanning` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idNutritionniste` (`idNutritionniste`),
@@ -938,12 +948,8 @@ CREATE TABLE IF NOT EXISTS `relationnutritionniste` (
 --
 
 INSERT INTO `relationnutritionniste` (`id`, `idNutritionniste`, `idClient`, `nutritionnisteAccesPlanning`) VALUES
-('660527e3eab0c', 1, 11, 0),
-('660527e2e714b', 1, 10, 0),
-('660527b5b9c63', 1, 7, 0),
-('66052754ef0eb', 1, 3, 0),
-('6605273c7bcdc', 1, 4, 0),
-('660529c30c62d', 1, 1, 0);
+('6619552dbe935', '66192fa120dbe', '6619484b8f09d', 1),
+('661954cfbf9ca', '66192fa120dbe', '66192fa120dbe', 0);
 
 -- --------------------------------------------------------
 
@@ -967,23 +973,23 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
 --
 
 INSERT INTO `utilisateurs` (`id`, `role`, `nom_utilisateur`, `mdp`, `email`, `token`) VALUES
-('1', 'nutritionniste', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr', NULL),
-('4', 'nutritionniste', 'Jean', 'motdepasse1', 'admin1@example.com', NULL),
-('5', 'utilisateur', 'utilisateur1', 'motdepasse2', 'utilisateur1@example.com', NULL),
-('3', 'nutritionniste', 'theo2', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'dded@de.com', NULL),
-('6', 'utilisateur', 'utilisateur2', 'motdepasse3', 'utilisateur2@example.com', NULL),
-('7', 'nutritionniste', 'nutritionniste1', 'motdepasse4', 'nutritionniste1@example.com', NULL),
-('8', 'nutritionniste', 'nutritionniste12', 'motdepasse4', 'nutritionniste21@example.com', NULL),
-('9', 'nutritionniste', 'nutritionniste13', 'motdepasse4', 'nutritionniste331@example.com', NULL),
-('10', 'nutritionniste', 'nutritionniste14', 'motdepasse4', 'nutritionniste41@example.com', NULL),
-('11', 'nutritionniste', 'nutritionniste15', 'motdepasse4', 'nutritionniste441@example.com', NULL),
-('12', 'utilisateur', 'client', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'client@free.fr', NULL),
-('13', 'utilisateur', 'aa', '9c1623f0d38e28e9594f2ef31a7ec909291c4fdb05a777dccd2e936a7f406011', 'dded@de.com', NULL),
-('14', 'utilisateur', 'aq', 'dd9603a19faa94218b85c812130ac7635385fb33a1acf69a7b4e10415d49d3b4', 'sasasasa@ee.Fr', NULL),
-('15', 'utilisateur', 's', '043a718774c572bd8a25adbeb1bfcd5c0256ae11cecf9f9c3f925d0e52beaf89', 'sasasasa@ee.Fr', NULL),
-('6606', 'utilisateur', 'az', '9c0ada37bf74aeefae949fdfc90db0cf6eaf90192eff67d65887771f0585e055', 'sasasasa@ee.Fr', NULL),
-('660bf5e528466', 'utilisateur', 'azaaza', 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', 'sasasasa@ee.Fr', NULL),
-('660bf5ef6fa55', 'utilisateur', 'asasaasas', 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', 'sasasasa@ee.Fr', NULL);
+('1', 'admin', 'Theo', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'sasasasa@ee.Fr', NULL),
+('4', 'utilisateur', 'Jean', 'motdepasse1', 'admin1@example.com', NULL),
+('5', 'utilisateur', 'Raymond', 'motdepasse2', 'utilisateur1@example.com', NULL),
+('3', 'nutritionniste', 'Juliette', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'dded@de.com', NULL),
+('6', 'utilisateur', 'Matthieu', 'motdepasse3', 'utilisateur2@example.com', NULL),
+('7', 'nutritionniste', 'Eric', 'motdepasse4', 'nutritionniste1@example.com', NULL),
+('8', 'nutritionniste', 'Alex', 'motdepasse4', 'nutritionniste21@example.com', NULL),
+('9', 'nutritionniste', 'Mohamed', 'motdepasse4', 'nutritionniste331@example.com', NULL),
+('10', 'nutritionniste', 'Ursula', 'motdepasse4', 'nutritionniste41@example.com', NULL),
+('11', 'nutritionniste', 'Yannis', 'motdepasse4', 'nutritionniste441@example.com', NULL),
+('12', 'utilisateur', 'Franck', '1f3ce40415a2081fa3eee75fc39fff8e56c22270d1a978a7249b592dcebd20b4', 'client@free.fr', NULL),
+('13', 'utilisateur', 'Jean-Eude', '9c1623f0d38e28e9594f2ef31a7ec909291c4fdb05a777dccd2e936a7f406011', 'dded@de.com', NULL),
+('14', 'utilisateur', 'Elias', 'dd9603a19faa94218b85c812130ac7635385fb33a1acf69a7b4e10415d49d3b4', 'sasasasa@ee.Fr', NULL),
+('15', 'utilisateur', 'Marie', '043a718774c572bd8a25adbeb1bfcd5c0256ae11cecf9f9c3f925d0e52beaf89', 'sasasasa@ee.Fr', NULL),
+('6606', 'utilisateur', 'Magalie', '9c0ada37bf74aeefae949fdfc90db0cf6eaf90192eff67d65887771f0585e055', 'sasasasa@ee.Fr', NULL),
+('6619484b8f09d', 'utilisateur', 'jul', 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', 'sasasasa@ee.Fr', NULL),
+('66192fa120dbe', 'nutritionniste', 'theonutritionniste', 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', 'sasasasa@ee.Fr', NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

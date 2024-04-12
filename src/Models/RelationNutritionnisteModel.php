@@ -17,9 +17,9 @@ class RelationNutritionnisteModel extends Model {
         $query = 'SELECT utilisateurs.id, nom_utilisateur
                     FROM relationnutritionniste
                     JOIN utilisateurs ON utilisateurs.id = relationnutritionniste.idClient
-                    WHERE relationnutritionniste.idNutritionniste = ' . $idNutritionniste .
-                    ' LIMIT ' . $premierItem . ', ' .$nbItem;
-                    
+                    WHERE relationnutritionniste.idNutritionniste = \'' . $idNutritionniste .
+                    '\' LIMIT ' . $premierItem . ', ' .$nbItem;
+
         return $this->executeQuery($query)->fetchAll();
     }
 

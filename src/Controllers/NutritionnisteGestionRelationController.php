@@ -30,7 +30,7 @@ class NutritionnisteGestionRelationController extends Controller {
         $premierItem = $pageActuelle * $itemsParPage - $itemsParPage;
         if($premierItem < 0) $premierItem = 0;
         $items = $repo->findByLimitesUtilisateursRelationNutritionnisteDetails($premierItem, $itemsParPage, $this->getUserIdCo());
-
+        
         /* Notifications demande de relations */
         $repoNotification = new NotificationModel();
         $notificationsDemande = $repoNotification->findUserOrigineNameByUserDest($this->getUserIdCo());
@@ -43,7 +43,7 @@ class NutritionnisteGestionRelationController extends Controller {
         ]);
     }
 
-    public function voirPlanning(int $idClient) {
+    public function voirPlanning($idClient) {
         $this->verifUtilisateurConnecte();
         $this->isNutritionniste();
 

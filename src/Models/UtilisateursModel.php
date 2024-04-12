@@ -22,7 +22,7 @@ class UtilisateursModel extends Model {
         return $this->executeQuery('SELECT * FROM ' . $this->table . 'WHERE nom_utilisateur = ? AND mdp = ?', [$name, $password])->fetch();
     }
 
-    public function findByLimitesNutritionnistesDetails($premierItem, $itemsParPage, int $userId) {
+    public function findByLimitesNutritionnistesDetails($premierItem, $itemsParPage, $userId) {
         
         $query = 'SELECT
                     utilisateurs.id,
