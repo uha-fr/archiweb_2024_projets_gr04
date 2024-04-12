@@ -11,8 +11,8 @@ class SuiviConsommationController extends Controller {
     public function index() {
 
         $formJour = new Form;
-        $formJour->debutForm('post', '', ['class' => 'role-form'])
-                ->ajoutInput('date', 'dayDate', ['onchange' => 'submitForm(this)'])
+        $formJour->debutForm('post', '', ['class' => 'role-form form-group'])
+                ->ajoutInput('date', 'dayDate', ['onchange' => 'submitForm(this)', 'class' => 'form-control'])
                 ->finForm();
 
         $optionsMois = [
@@ -31,16 +31,16 @@ class SuiviConsommationController extends Controller {
         ];
         $optionsAnnees = ['2024' => '2024'];
         $formMois = new Form;
-        $formMois->debutForm()
-                    ->ajoutSelect('moisDate', $optionsMois)
-                    ->ajoutSelect('moisAnneeDate', $optionsAnnees)
-                    ->ajoutBouton('Valider', ['type' => 'submit'])
+        $formMois->debutForm('post', '', ['class' => 'form-control'])
+                    ->ajoutSelect('moisDate', $optionsMois, ['class' => 'form-control'])
+                    ->ajoutSelect('moisAnneeDate', $optionsAnnees, ['class' => 'form-control'])
+                    ->ajoutBouton('Valider', ['type' => 'submit', 'class' => 'form-control'])
                     ->finForm();
 
         $formAnnee = new Form;
-        $formAnnee->debutForm()
-                    ->ajoutSelect('anneeDate', $optionsAnnees)
-                    ->ajoutBouton('Valider', ['type' => 'submit'])
+        $formAnnee->debutForm('post', '', ['class' => 'form-control'])
+                    ->ajoutSelect('anneeDate', $optionsAnnees, ['class' => 'form-control'])
+                    ->ajoutBouton('Valider', ['type' => 'submit', 'class' => 'form-control'])
                     ->finForm();
 
 

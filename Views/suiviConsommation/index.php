@@ -3,14 +3,25 @@
 </head>
 
 
-<main>
-	<?= $formJour ?>
-	<?= $formMois ?>
-	<?= $formAnnee ?>
-	<h3><?= $titre ?></h3>
-	<div class="w-50 h-50">
-		<canvas id="myChart"></canvas>
-	</div>
+<main class="container">
+    <div class="row">
+        <div class="col">
+            <label>Au jour :</label>
+            <?= $formJour ?>
+        </div>
+        <div class="col">
+            <label>Au mois :</label>
+            <?= $formMois ?>
+        </div>
+        <div class="col">
+            <label>Mensuel sur l'année :</label>
+            <?= $formAnnee ?>
+        </div>
+    </div>
+    <h3><?= $titre ?></h3>
+    <div class="w-100 h-100">
+        <canvas id="myChart"></canvas>
+    </div>
 </main>
 
 <script type="text/javascript" src="/public/js/lib.js"></script>

@@ -1,11 +1,12 @@
 <head>
     <link href="/public/css/recettes.css" rel="stylesheet">
     <title>Mes recettes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<main>
-    <div class="recettes-list">
-        <section class="col-12">
+<main class="row">
+    <div class="col-md-12 col-lg-6">
+        <section>
             <h3>Recettes</h3>
             <div class="d-flex justify-content-between">
                 <a href="recette/ajoutermodifier" class="btn btn-primary text-decoration-none">Ajouter une recette</a>
@@ -36,7 +37,7 @@
                 </tbody>
             </table>
             <nav>
-                <ul class="pagination">
+                <ul class="pagination justify-content-center flex-wrap">
                     <li class="page-item <?= ($pageActuelle == 1) ? "disabled" : "" ?>">
                         <a href="?page=<?= $pageActuelle - 1 ?>" class="page-link">Page précédente</a>
                     </li>
@@ -54,7 +55,7 @@
         </section>
     </div>
 
-    <div class="frigo">
+    <div class="col-md-12 col-lg-6">
         <h3>J'ai quoi dans mon frigo ?</h3>
         <div class="d-flex gap-1"><?= $formAliments ?></div>
         <ul id="resultatsAliments"></ul>
