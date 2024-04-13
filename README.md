@@ -1,5 +1,6 @@
 # Archiweb Projet 'MANGER' - ELLOUZATI Mohamed / NICOD Théo / SCHLAGETER Alex
 Cette application est un outil permettant de suivre son alimentation
+![Logo de l'Université](uha.png)
 
 ## Prérequis
 Intallez un environement WAMP, LAMP ou MAMP selon votre système d'exploitation
