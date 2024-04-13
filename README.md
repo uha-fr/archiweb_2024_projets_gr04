@@ -1,5 +1,4 @@
 # Archiweb Projet 'MANGER' - ELLOUZATI Mohamed / NICOD Théo / SCHLAGETER Alex
-![Logo de l'Université](uha.png)
 Cette application est un outil permettant de suivre son alimentation
 
 ## Prérequis
@@ -32,3 +31,5 @@ Dans votre système de base de données, importez la base de données "manger.sq
 
 ## Lancer le projet
 Si tout est mis en place correctement, vous pouvez accédez à l'application depuis http://localhost/archiweb_2024_projets_gr04/ (ou depuis votre virtual host)
+
+![Logo de l'Université](uha.png) 
