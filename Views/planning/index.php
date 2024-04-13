@@ -33,19 +33,36 @@
 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 		}
 
+
+
 		.btn-primary {
-			background-color: #007bff;
-			border-color: #007bff;
+            
+			background-color: #ee0979;
+			border-color: #ee0979;
 		}
 
 		.btn-primary:hover {
-			background-color: #0056b3;
-			border-color: #0056b3;
+			background-color: #be0761;
+			border-color:  #be0761;
+		}
+
+        .btn-primary2 {
+            display: block; 
+            width: 100%; 
+            text-align: center;
+			background-color: #ee0979;
+			border-color: #ee0979;
+		}
+
+		.btn-primary2:hover {
+			background-color: #be0761;
+			border-color:  #be0761;
 		}
 
 		.form-control {
 			border-radius: 5px;
 		}
+
 
 		.modal {
 			position: fixed;
@@ -105,48 +122,54 @@
 
 
 	<?php if (isset($client)) : ?>
-		<h3><?= $titre ?></h3>
-	<?php endif ?>
+    <h3 class="text-center" style="color: #333333;"><?= $titre ?></h3>
+    <?php endif ?>
 
-	<?php if (isset($relation) && $relation->getNutritionnisteAccesPlanning() == 1) : ?>
-		<p><?= $client->getNomUtilisateur() ?> vous a donné l'accès à l'édition de son planning</p>
-	<?php endif ?>
+    <?php if (isset($relation) && $relation->getNutritionnisteAccesPlanning() == 1) : ?>
+        <p class="text-center" style="margin: 20px auto; max-width: 700px; background-color: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <?= $client->getNomUtilisateur() ?> vous a donné l'accès à l'édition de son planning
+        </p>
+    <?php endif ?>
 
-	<?php if ($controller == "Planning") : ?>
-		<?php if ($accesAccorde == "0" || $accesAccorde == "1") : ?>
-			<?php if ($accesAccorde == "0") : ?>
-				<button id="acces=false" class="mx-2" onclick="accorderAcces(this)" ">Accorder l'accès à mon nutritionniste</button>
-            <?php else : ?>
-                <button id=" acces=true" class="mx-2" onclick="accorderAcces(this)" ">Retirer l'accès à mon nutritionniste</button>
+    <?php if ($controller == "Planning") : ?>
+        <div style="text-align: center; margin-top: 30px;">
+            <?php if ($accesAccorde == "0" || $accesAccorde == "1") : ?>
+                <?php if ($accesAccorde == "0") : ?>
+                    <button id="acces=false" class="btn btn-primary mx-2 " onclick="accorderAcces(this)">Accorder l'accès à mon nutritionniste</button>
+                <?php else : ?>
+                    <button id="acces=true" class="btn btn-primary mx-2" onclick="accorderAcces(this)">Retirer l'accès à mon nutritionniste</button>
+                <?php endif ?>
             <?php endif ?>
-        <?php endif ?>
-        <button id="ouvrir-modal">Générer ma liste de courses</button>
-			<?php endif ?>
+            <button id="ouvrir-modal" class="btn btn-primary mx-2">Générer ma liste de courses</button>
+        </div>
+    <?php endif ?>
+
 
 			<div id="calendar"></div>
 
 			<?php if ($controller == 'Planning' || isset($relation) && $relation->getNutritionnisteAccesPlanning() == 1) : ?>
 				<h2>Ajouter une recette au planning</h2>
 				<form id="eventForm" class="mt-3">
-					<div class="row justify-content-center">
-						<div class="col-md-4 ">
-							<select id="recette" class="form-control" onchange="showDescription()">
-								<option value="">Choisir une recette</option>
-								<?php foreach ($recettes as $recette) : ?>
-									<option value="<?= htmlspecialchars($recette->id) ?>" data-description="<?= htmlspecialchars($recette->description) ?>"><?= htmlspecialchars($recette->nom) ?></option>
-								<?php endforeach; ?>
-							</select>
-						</div>
-						<div class="col-md-4">
-							<input type="date" id="dateDebut" class="form-control" required>
-						</div>
-						<div class="col-md-4">
-							<input type="date" id="dateFin" class="form-control">
-						</div>
-						<div class="col-md-4">
-							<button type="submit" class="btn btn-primary mt-4">Ajouter la recette</button>
-						</div>
-					</div>
+                <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <select id="recette" class="form-control" onchange="showDescription()">
+                        <option value="">Choisir une recette</option>
+                        <?php foreach ($recettes as $recette) : ?>
+                            <option value="<?= htmlspecialchars($recette->id) ?>" data-description="<?= htmlspecialchars($recette->description) ?>"><?= htmlspecialchars($recette->nom) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" id="dateDebut" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="date" id="dateFin" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary mt-4 w-100">Ajouter la recette</button>
+                </div>
+            </div>
+
 					<div class="col-md-12 mt-3 mx-auto ">
 						<div id="recetteDescription" class="card" style="display:none;">
 							<div class="card-body">
