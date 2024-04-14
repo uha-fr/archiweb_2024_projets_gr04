@@ -113,7 +113,7 @@
 					</ul>
 					<form action="" method="post">
 						<input type="hidden" name="telechargerRecette"/>
-						<button type="">Télécharger</button>
+						<button type="" class="btn btn-primary">Télécharger</button>
 					</form>
 				<?php endif ?>
 			<?php endif ?>

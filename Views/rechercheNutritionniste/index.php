@@ -20,7 +20,7 @@
                         <td><?= $nutritionniste->nom_utilisateur ?></td>
                         <td><?= $nutritionniste->nbRelations ?></td>
                         <?php if(empty($relation)): ?>
-                            <td><button id="<?= $nutritionniste->id ?>" onclick="demandeSuivi(this)" <?= $nutritionniste->notif ? "disabled" : "" ?>>Demander</button></td>
+                            <td><button id="<?= $nutritionniste->id ?>" class="btn btn-primary" onclick="demandeSuivi(this)" <?= $nutritionniste->notif ? "disabled" : "" ?>>Demander</button></td>
                         <?php endif ?>
                     </tr>
                 <?php endforeach ?>
