@@ -13,19 +13,18 @@ class Main {
         //Récupération de l'URL
         $uri = $_SERVER['REQUEST_URI'];
 
-        if(!empty($uri) && $uri != '/' && $uri[-1] === '/'){
+        if(!empty($uri) && $uri != '/' && $uri[-1] === '/' && isset($_GET['p']) && !empty($_GET['p'])){
             //On enlève le /
 
             $uri = substr($uri, 0, -1);
             
             //Envoi de code de redirection permanente
             http_response_code(301);
-
+            
             //Redirection vers l'URL sans /
             header('Location: ' . $uri);
             exit;
         }
-
         //Séparage des paramètres de l'URL dans un tableau
         $params = [];
         if(isset($_GET['p']))

@@ -94,7 +94,7 @@ class NutritionnisteGestionRelationController extends Controller {
 
     private function isNutritionniste() {
         if($_SESSION['utilisateur']['role'] != "nutritionniste") {
-            header('Location: /accueil');
+            header('Location: ' . WEBROOT . '/accueil');
             exit;
         }
     }

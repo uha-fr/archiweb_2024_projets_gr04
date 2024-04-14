@@ -13,14 +13,14 @@
         <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="public/css/styles.css" rel="stylesheet" />
+        <link href="<?= WEBROOT ?>/public/css/styles.css" rel="stylesheet" />
     </head>
     <body id="page-top">
         <!-- Header-->
         <header class="masthead text-center text-white">
             <div class="masthead-content">
                 <div class="container px-5">
-                    <img class="responsive-image" src="/public/images/logo.png" alt="Logo complet de MANGER">
+                    <img class="responsive-image" src="<?= WEBROOT ?>/public/images/logo.png" alt="Logo complet de MANGER">
                     <h1 class="masthead-heading mb-0">Une Application pour</h1>
                     <h2 class="masthead-subheading mb-0">Manger, planifier, préparer des recettes...</h2>
                     <a class="btn btn-primary btn-xl rounded-pill mt-5" href="#scroll">Démarrer</a>
