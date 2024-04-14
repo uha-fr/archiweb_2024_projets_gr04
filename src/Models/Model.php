@@ -110,18 +110,24 @@ class Model extends Database {
      * @param array|null $attributs Les attributs à utiliser dans la requête préparée (optionnel).
      * @return object L'objet de requête préparée ou le résultat de la requête directe.
      */
-    public function executeQuery(string $sql, array $attributs = null){
-
+    public function executeQuery(string $sql, array $attributs = null) {
         $this->db = Database::getInstance();
-
-        if($attributs !== null) {
-            $query = $this->db->prepare($sql);
-            $query->execute($attributs);
-            return $query;
-        }else{
-            return $this->db->query($sql);
+    
+        try {
+            if ($attributs !== null) {
+                $query = $this->db->prepare($sql);
+                $query->execute($attributs);
+            } else {
+                $query = $this->db->query($sql);
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur de base de données : " . $e->getMessage());
+            throw new Exception("Erreur de base de données lors de l'exécution de la requête.");
         }
+    
+        return $query;
     }
+    
 
     /**
      * Ajoute l'entitée courante en base de donnée
